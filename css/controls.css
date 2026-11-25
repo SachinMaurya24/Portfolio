@@ -1,0 +1,146 @@
+/* =========================================================================
+   INTERACTIVE CONTROLS: HAIRLINE BUTTONS, DRAFTING SLIDERS & REPO LEDGER
+   ========================================================================= */
+
+/* Interactive Hairline Links */
+.mono-action {
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule-strong);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.mono-action:hover,
+.mono-action:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* Hairline Buttons */
+.hairline-btn {
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-muted);
+  background: transparent;
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  cursor: pointer;
+}
+
+.hairline-btn:hover,
+.hairline-btn:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
+  outline: none;
+}
+
+.hairline-btn.is-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+}
+
+/* Compact Mode Switcher Pills in Field Dock */
+.mode-pill {
+  border: 1px solid var(--rule);
+  color: var(--ink-muted);
+  background: transparent;
+  padding: 0.28rem 0.5rem;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.mode-pill:hover {
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+
+.mode-pill.is-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+}
+
+/* =========================================================================
+   PRECISION DRAFTING RANGE SLIDER (1px Hairline Track + Square Thumb)
+   ========================================================================= */
+input[type="range"].manifold-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 26px;
+  background: transparent;
+  cursor: ew-resize;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="range"].manifold-slider:focus {
+  outline: none;
+}
+
+input[type="range"].manifold-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+input[type="range"].manifold-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  border: 1px solid var(--bg);
+  margin-top: -4px;
+  transition: transform 140ms ease, background-color 180ms ease;
+}
+
+input[type="range"].manifold-slider:hover::-webkit-slider-thumb,
+input[type="range"].manifold-slider:active::-webkit-slider-thumb {
+  transform: scale(1.28);
+}
+
+input[type="range"].manifold-slider::-moz-range-track {
+  width: 100%;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+input[type="range"].manifold-slider::-moz-range-thumb {
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  border: 1px solid var(--bg);
+  border-radius: 0;
+  transition: transform 140ms ease;
+}
+
+/* Text filter input for GitHub Index */
+.hairline-input {
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+  padding: 0.35rem 0.6rem;
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  transition: border-color 180ms ease;
+}
+
+.hairline-input::placeholder {
+  color: var(--ink-muted);
+}
+
+.hairline-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* GitHub Repository Row Hover */
+.repo-row {
+  border-left: 2px solid transparent;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.repo-row:hover {
+  background-color: var(--accent-soft);
+  border-left-color: var(--accent);
+}

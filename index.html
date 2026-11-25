@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="obsidian">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Living Manifold — A Modern Mathematical Treatise · Sachin Maurya</title>
+
+  <!-- Academic Monograph & Swiss Technical Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS for Swiss Grid & Responsive Layout -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Modular Monograph Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/controls.css" />
+
+  <!-- KaTeX for Typeset Mathematical Equations -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    crossorigin="anonymous"
+  />
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    crossorigin="anonymous"
+    onload="renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }] });"
+  ></script>
+</head>
+
+<body>
+  <!-- =========================================================================
+       FULL-VIEWPORT LIVING MATHEMATICAL CANVAS (60FPS, 5 INTERACTIVE DOMAINS)
+       ========================================================================= -->
+  <canvas id="manifold-canvas" aria-label="Interactive mathematical field canvas"></canvas>
+
+  <!-- =========================================================================
+       STICKY MINIMAL MASTHEAD (SWISS EDITORIAL NAVIGATION)
+       ========================================================================= -->
+  <header class="masthead fixed top-0 left-0 right-0 z-40">
+    <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-8 h-12 flex items-center justify-between gap-3">
+      <!-- Left: Treatise Identifier -->
+      <a
+        href="#hero"
+        class="font-mono-spec text-[10px] sm:text-[11px] tracking-[0.14em] uppercase text-ink hover:text-accent transition-colors truncate"
+      >
+        TREATISE NO. 01 <span class="hidden md:inline text-muted">— THE LIVING MANIFOLD</span>
+      </a>
+
+      <!-- Center: Dynamic Section Telemetry Marker -->
+      <div
+        id="masthead-section"
+        class="hidden sm:flex items-center gap-2 font-mono-spec text-[11px] tracking-[0.12em] uppercase text-accent tabular-nums"
+      >
+        <span class="live-square"></span>
+        <span id="masthead-section-label">§ 00 FIELD</span>
+      </div>
+
+      <!-- Right: Minimal Navigation & Interactive Controls -->
+      <div class="flex items-center gap-2 sm:gap-4 font-mono-spec text-[10px] sm:text-[11px] tracking-[0.1em] uppercase">
+        <nav class="hidden xl:flex items-center gap-5 text-muted">
+          <a href="#plates" class="hover:text-ink transition-colors">Plates</a>
+          <a href="#repositories" class="hover:text-ink transition-colors">GitHub</a>
+          <a href="#foundations" class="hover:text-ink transition-colors">Foundations</a>
+          <a href="#colophon" class="hover:text-ink transition-colors">Colophon</a>
+        </nav>
+
+        <button
+          id="pause-btn"
+          type="button"
+          class="hidden md:inline-block hairline-btn px-2 py-1 text-[10px] tracking-[0.1em] uppercase"
+          title="Pause or resume simulation (Space)"
+        >
+          [ ❚❚ PAUSE ]
+        </button>
+
+        <button
+          id="inspect-btn"
+          type="button"
+          class="hairline-btn px-2 py-1 text-[10px] tracking-[0.1em] uppercase"
+          title="Fade editorial prose to interact directly with the mathematical field (I / Esc)"
+          aria-pressed="false"
+        >
+          [ INSPECT FIELD ]
+        </button>
+
+        <button
+          id="theme-btn"
+          type="button"
+          class="hairline-btn px-2 py-1 text-[10px] tracking-[0.1em] uppercase"
+          title="Toggle Deep Obsidian / Archival Paper surface (T)"
+        >
+          [ ◐ OBSIDIAN ]
+        </button>
+      </div>
+    </div>
+
+    <!-- 1px Hairline Scroll Progress Bar -->
+    <div class="scroll-progress-track" aria-hidden="true">
+      <div id="scroll-progress-bar"></div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       FLOATING INTERACTIVE FIELD DOCK & CANVAS FEEDBACK TOAST
+       ========================================================================= -->
+  <div id="canvas-toast" class="canvas-toast font-mono-spec text-[10px] tracking-[0.12em] uppercase" role="status" aria-live="polite"></div>
+
+  <aside class="field-dock drafting-frame px-3.5 py-2.5 font-mono-spec text-[10px] tracking-[0.08em]" aria-label="Field controls">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-1" role="group" aria-label="Select active mathematical domain">
+        <button type="button" data-dock-mode="0" class="mode-pill is-active" title="Mode 0: Scalar Gradient Field (Key 0)">∇f</button>
+        <button type="button" data-dock-mode="1" class="mode-pill" title="Mode 1: N-Body Quadtree Field (Key 1)">I</button>
+        <button type="button" data-dock-mode="2" class="mode-pill" title="Mode 2: Stochastic SDE Field (Key 2)">II</button>
+        <button type="button" data-dock-mode="3" class="mode-pill" title="Mode 3: Fourier Harmonic Epicycles (Key 3)">III</button>
+        <button type="button" data-dock-mode="4" class="mode-pill" title="Mode 4: Latency Flow Field (Key 4)">IV</button>
+        <button type="button" data-dock-mode="5" class="mode-pill" title="Mode 5: 3D Strange Attractors (Key 5)">V</button>
+        <button type="button" data-dock-mode="6" class="mode-pill" title="Mode 6: Helmholtz Nodal Eigenmodes (Key 6)">VI</button>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button id="dock-pause-btn" type="button" class="mode-pill" title="Pause / Resume (Space)">❚❚</button>
+        <button id="dock-reset-btn" type="button" class="mode-pill" title="Reset active field (R)">↺</button>
+      </div>
+    </div>
+    <div id="dock-hint" class="hidden sm:block mt-1.5 pt-1.5 rule-t text-[9px] text-muted max-w-[300px] leading-snug">
+      Click canvas to place gravity well · Shift+Click for peak
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       MAIN MONOGRAPH BODY
+       Grid Architecture: Left Marginalia | Center-Left Prose | Right Open Field
+       ========================================================================= -->
+  <main class="relative z-10 w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-12">
+
+    <!-- =======================================================================
+         § 00 HERO — TOPOGRAPHIC SCALAR & GRADIENT FIELD (∇f)
+         ======================================================================= -->
+    <section
+      id="hero"
+      data-section-label="§ 00 FIELD"
+      data-mode="0"
+      class="min-h-[94vh] py-14 sm:py-20 flex flex-col justify-center"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+
+        <!-- Left Marginalia Column (Col 1-2) -->
+        <aside class="lg:col-span-2 order-2 lg:order-1 pt-2">
+          <div class="editorial-veil py-3 px-3 rule-t rule-b space-y-3 font-mono-spec text-[10px] leading-relaxed tracking-[0.08em] text-muted">
+            <div class="flex items-center justify-between text-ink">
+              <span>FIG. 0.1</span>
+              <span class="text-accent">§ 00</span>
+            </div>
+            <div>
+              <div class="uppercase text-ink">MANIFOLD: ∇f(x, y, t)</div>
+              <div class="mt-0.5">Scalar potential &amp; steepest-descent vector lattice</div>
+            </div>
+
+            <!-- Live Differential Telemetry -->
+            <div class="rule-t pt-2.5 space-y-1 tabular-nums">
+              <div class="flex justify-between">
+                <span>COORD (x, y)</span>
+                <span id="tel-xy" class="text-ink">+0.00, +0.00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>POTENTIAL f</span>
+                <span id="tel-f" class="text-ink">-0.000</span>
+              </div>
+              <div class="flex justify-between">
+                <span>NORM |∇f|</span>
+                <span id="tel-grad" class="text-accent">0.000</span>
+              </div>
+              <div class="flex justify-between">
+                <span>WELLS (±M)</span>
+                <span id="tel-scalar-wells" class="text-ink">0</span>
+              </div>
+            </div>
+
+            <!-- Direct Mode 0 Interactive Toggles -->
+            <div class="rule-t pt-2.5 flex flex-col gap-1.5">
+              <button
+                id="btn-scalar-streamlines"
+                type="button"
+                class="hairline-btn is-active px-2 py-1 text-[9px] tracking-[0.1em] uppercase text-left"
+              >
+                [ STREAMLINES: ON ]
+              </button>
+              <button
+                id="btn-scalar-clear"
+                type="button"
+                class="hairline-btn px-2 py-1 text-[9px] tracking-[0.1em] uppercase text-left"
+              >
+                [ CLEAR WELLS ]
+              </button>
+            </div>
+
+            <p class="rule-t pt-2.5 italic font-serif-math text-[12px] tracking-normal text-muted">
+              Click anywhere on the open field to place persistent gravity wells; Shift+Click to place a repulsive peak.
+            </p>
+          </div>
+        </aside>
+
+        <!-- Center-Left Editorial Column (Col 3-8) -->
+        <div class="lg:col-span-6 order-1 lg:order-2">
+          <div class="editorial-veil drafting-frame p-5 sm:p-8 lg:p-9">
+            <div class="font-mono-spec text-[10px] sm:text-[11px] tracking-[0.16em] uppercase text-accent mb-5">
+              MONOGRAPH IN COMPUTATIONAL SYSTEMS &amp; APPLIED MATHEMATICS
+            </div>
+
+            <h1 class="hero-title font-serif-math font-normal text-ink">
+              Sachin Maurya
+            </h1>
+
+            <p class="mt-5 font-serif-math italic text-xl sm:text-2xl leading-[1.42] text-muted font-normal">
+              The Living Manifold — Modeling complex systems through geometry, low-level computation, and algorithmic rigor.
+            </p>
+
+            <!-- Governing Scalar Field Equation -->
+            <div class="formula-strip mt-6">
+              <div class="font-mono-spec text-[9px] tracking-[0.14em] uppercase text-muted">
+                Eq. 0.1 — Scalar Potential &amp; Steepest Descent
+              </div>
+              <div class="text-[15px]">
+                $$\nabla f(x, y, t) = \left(\frac{\partial f}{\partial x},\, \frac{\partial f}{\partial y}\right)$$
+              </div>
+            </div>
+
+            <!-- Live GitHub Bio (populated dynamically if present on github.com/SachinMaurya24) -->
+            <p id="gh-profile-bio" class="hidden mt-4 font-mono-spec text-[11px] leading-relaxed text-accent"></p>
+
+            <!-- Hairline Definition Block -->
+            <div class="mt-8 pl-5 rule-l-accent space-y-2.5">
+              <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-ink">
+                Def. 0.1 <span class="text-muted">— Domain of Inquiry</span>
+              </div>
+              <p class="font-serif-math text-[17px] sm:text-[18px] leading-[1.65] text-ink/90">
+                An engineering practice grounded in exact structure: algorithmic problem solving, numerical simulation, interactive graphics, and clean systems engineering—synced directly with live repositories from GitHub.
+              </p>
+            </div>
+
+            <!-- Minimal Hairline Text Actions -->
+            <div class="mt-9 pt-6 rule-t flex flex-wrap items-center gap-x-8 gap-y-4 font-mono-spec text-[11px] tracking-[0.1em] uppercase">
+              <a href="#plates" class="mono-action py-1.5 inline-flex items-center gap-2">
+                <span>§ 01 Inspect Living Plates</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+              <a href="#repositories" class="mono-action py-1.5 inline-flex items-center gap-2 text-muted">
+                <span>§ 02 GitHub Index</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+              <a
+                href="https://github.com/SachinMaurya24"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mono-action py-1.5 inline-flex items-center gap-2 text-muted"
+              >
+                <span>GitHub / SachinMaurya24</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Open Canvas Viewing Corridor (Col 9-12) -->
+        <div class="hidden lg:flex lg:col-span-4 order-3 flex-col justify-end items-end self-end pb-4">
+          <div class="font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted/80 text-right space-y-1">
+            <div>LIVE FIELD VIEWPORT</div>
+            <div>MARCHING SQUARES · Δs = 22px</div>
+            <div class="text-accent">CLICK OPEN SPACE TO PERTURB</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         § 01 SHOWCASE — LIVING PLATES (POPULATED LIVE FROM GITHUB REPOS)
+         ======================================================================= -->
+    <section id="plates" class="rule-t pt-12 pb-6">
+      <!-- Section Header -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12">
+        <div class="lg:col-span-2 font-mono-spec text-[11px] tracking-[0.14em] uppercase text-accent pt-1">
+          § 01 / PLATES
+        </div>
+        <div class="lg:col-span-6">
+          <div class="editorial-veil p-5 sm:px-8 sm:py-6">
+            <h2 class="font-serif-math text-3xl sm:text-4xl font-normal tracking-[-0.015em] text-ink">
+              Featured Repositories &amp; Living Plates
+            </h2>
+            <p class="mt-3 font-serif-math text-[16px] sm:text-[17px] leading-[1.6] text-muted">
+              Each plate below pulls directly from published repositories on <span class="font-mono-spec text-[13px] text-ink">github.com/SachinMaurya24</span> and pairs it with a live interactive mathematical field. Adjust parameters or click directly on the open canvas to perturb each system.
+            </p>
+          </div>
+        </div>
+        <div class="lg:col-span-4 hidden lg:flex items-end justify-end pb-2">
+          <div class="font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted text-right">
+            PLATES I — IV · LIVE GITHUB SYNC
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           PLATE I · GITHUB REPO 01 + LIVE N-BODY QUADTREE FIELD
+           ===================================================================== -->
+      <article
+        id="plate-1"
+        data-section-label="§ 01 PLATE I · N-BODY"
+        data-mode="1"
+        class="plate-section rule-t min-h-[78vh] py-16 sm:py-24 flex items-center"
+      >
+        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <!-- Left Marginalia -->
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+            <div class="text-accent">PLATE I</div>
+            <div>FIELD: N-BODY</div>
+            <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
+              Live recursive quadtree gravitational field paired with Repository 01.
+            </div>
+            <div id="status-mode-1" class="pt-2 flex items-center gap-2 text-muted">
+              <span class="mode-dot inline-block w-1.5 h-1.5 bg-[var(--rule-strong)]"></span>
+              <span class="mode-state-label">STANDBY</span>
+            </div>
+          </div>
+
+          <!-- Center-Left Editorial Plate -->
+          <div class="lg:col-span-6">
+            <div class="editorial-veil p-5 sm:p-8 space-y-6">
+              <div class="flex flex-wrap items-baseline justify-between gap-2 rule-b pb-3">
+                <span id="plate-1-kicker" class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+                  SYNCING REPO 01 FROM GITHUB...
+                </span>
+                <span class="font-mono-spec text-[10px] tracking-[0.08em] text-muted">
+                  CLICK CANVAS TO INJECT STAR
+                </span>
+              </div>
+
+              <div>
+                <h3 id="plate-1-title" class="font-serif-math text-2xl sm:text-3xl font-normal text-ink leading-snug">
+                  Barnes Hut N Body Simulator
+                </h3>
+                <div id="plate-1-meta" class="mt-2 font-mono-spec text-[10px] sm:text-[11px] tracking-[0.06em] text-muted">
+                  Barnes-Hut-N-Body-Simulator · C++ · github.com/SachinMaurya24
+                </div>
+              </div>
+
+              <p id="plate-1-desc" class="font-serif-math text-[16px] sm:text-[17px] leading-[1.68] text-ink/90">
+                This project is made for my childhood science dream , Wanted to simulate diffenerent galaxies and reserch over it , I am glad that the NEW AI models really helped me to research and code my childhood dream !
+              </p>
+
+              <div class="formula-strip">
+                <div class="font-mono-spec text-[9px] tracking-[0.14em] uppercase text-muted">
+                  Eq. I.1 — Barnes–Hut Force &amp; Multipole Criterion
+                </div>
+                <div class="text-[14px]">
+                  $$\mathbf{a}_i = -G \sum_{j \neq i} \frac{m_j (\mathbf{r}_i - \mathbf{r}_j)}{\left(\|\mathbf{r}_i - \mathbf{r}_j\|^2 + \varepsilon^2\right)^{3/2}}, \quad \theta = \frac{s}{d}$$
+                </div>
+              </div>
+
+              <!-- Live Parameter Controls -->
+              <div class="rule-t rule-b py-4 space-y-4">
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-nbody" class="uppercase tracking-[0.1em] text-ink">
+                      Δt <span class="text-muted">(Time Step Scale)</span>
+                    </label>
+                    <span id="val-nbody" class="text-accent tabular-nums">1.00×</span>
+                  </div>
+                  <input
+                    id="slider-nbody"
+                    type="range"
+                    min="0.20"
+                    max="2.50"
+                    step="0.05"
+                    value="1.00"
+                    class="manifold-slider"
+                  />
+                </div>
+
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-theta" class="uppercase tracking-[0.1em] text-ink">
+                      θ <span class="text-muted">(Opening Angle Criterion)</span>
+                    </label>
+                    <span id="val-theta" class="text-accent tabular-nums">0.65</span>
+                  </div>
+                  <input
+                    id="slider-theta"
+                    type="range"
+                    min="0.20"
+                    max="1.40"
+                    step="0.05"
+                    value="0.65"
+                    class="manifold-slider"
+                  />
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 pt-1 font-mono-spec text-[10px] tracking-[0.06em] text-muted tabular-nums">
+                  <div>
+                    <div class="uppercase">Active Bodies</div>
+                    <div id="tel-nbody-n" class="text-ink mt-0.5">144</div>
+                  </div>
+                  <div>
+                    <div class="uppercase">Quadtree Nodes</div>
+                    <div id="tel-nbody-nodes" class="text-ink mt-0.5">—</div>
+                  </div>
+                  <div>
+                    <div class="uppercase">Canvas Click</div>
+                    <div class="text-ink mt-0.5">+Star / Shift +Core</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Plate Footer Controls -->
+              <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" data-lock-mode="1" class="lock-btn hairline-btn px-3 py-1.5">
+                    [ LOCK FIELD ]
+                  </button>
+                  <button id="btn-nbody-quad" type="button" class="hairline-btn is-active px-2.5 py-1.5">
+                    [ QUADTREE: ON ]
+                  </button>
+                  <button id="btn-nbody-reset" type="button" class="hairline-btn px-2.5 py-1.5">
+                    [ RESET ]
+                  </button>
+                </div>
+                <div class="flex items-center gap-4">
+                  <a
+                    id="plate-1-demo-link"
+                    href="https://barnes-hut-n-body-simulator.vercel.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-accent"
+                  >
+                    Live Demo ↗
+                  </a>
+                  <a
+                    id="plate-1-repo-link"
+                    href="https://github.com/SachinMaurya24/Barnes-Hut-N-Body-Simulator"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-muted"
+                  >
+                    Barnes-Hut-N-Body-Simulator ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden lg:block lg:col-span-4"></div>
+        </div>
+      </article>
+
+      <!-- =====================================================================
+           PLATE II · GITHUB REPO 02 + LIVE STOCHASTIC DIFFUSION FIELD
+           ===================================================================== -->
+      <article
+        id="plate-2"
+        data-section-label="§ 01 PLATE II · POKE1PLAYERGAME"
+        data-mode="3"
+        class="plate-section rule-t min-h-[78vh] py-16 sm:py-24 flex items-center"
+      >
+        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <!-- Left Marginalia -->
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+            <div class="text-accent">PLATE II</div>
+            <div>TYPE: TYPESCRIPT / WEB</div>
+            <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
+              Standalone repository entry · Fourier epicycles &amp; Lissajous backdrop.
+            </div>
+          </div>
+
+          <!-- Center-Left Editorial Plate -->
+          <div class="lg:col-span-6">
+            <div class="editorial-veil p-5 sm:p-8 space-y-6">
+              <div class="flex flex-wrap items-baseline justify-between gap-2 rule-b pb-3">
+                <span id="plate-2-kicker" class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+                  SYNCING REPO 02 FROM GITHUB...
+                </span>
+              </div>
+
+              <div>
+                <h3 id="plate-2-title" class="font-serif-math text-2xl sm:text-3xl font-normal text-ink leading-snug">
+                  Poke1PlayerGame
+                </h3>
+                <div id="plate-2-meta" class="mt-2 font-mono-spec text-[10px] sm:text-[11px] tracking-[0.06em] text-muted">
+                  Poke1PlayerGame · TypeScript · github.com/SachinMaurya24
+                </div>
+              </div>
+
+              <div id="plate-2-desc" data-preserve-desc="true" class="font-serif-math text-[16px] sm:text-[17px] leading-[1.68] text-ink/90 space-y-3">
+                <p>
+                  An interactive single-player Pokémon battle and exploration web game built in TypeScript, featuring turn-based combat mechanics, type-effectiveness calculations, and responsive state transitions.
+                </p>
+                <p>
+                  Implements modular game-loop architecture, sprite rendering, move-set selection, and HP/status progression in a lightweight browser-native client.
+                </p>
+                <p class="text-muted text-[15px]">
+                  Published open-source under <span class="font-mono-spec text-[12px] text-ink">github.com/SachinMaurya24</span> with a live playable deployment on Vercel.
+                </p>
+              </div>
+
+              <!-- Big Demo CTA & GitHub Links -->
+              <div class="rule-t pt-5 space-y-3">
+                <a
+                  id="plate-2-demo-link"
+                  href="https://poke1-player-game.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hairline-btn is-active w-full flex items-center justify-between px-5 py-3.5 font-mono-spec text-[12px] tracking-[0.14em] uppercase"
+                >
+                  <span>LAUNCH LIVE DEMO</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase pt-1">
+                  <a
+                    id="plate-2-repo-link"
+                    href="https://github.com/SachinMaurya24/Poke1PlayerGame"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-ink"
+                  >
+                    Poke1PlayerGame Repository ↗
+                  </a>
+                  <a
+                    href="https://github.com/SachinMaurya24"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-muted"
+                  >
+                    github.com/SachinMaurya24 ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden lg:block lg:col-span-4"></div>
+        </div>
+      </article>
+
+      <!-- =====================================================================
+           PLATE III · GITHUB REPO 03 + 3D STRANGE ATTRACTORS & PHASE MANIFOLD
+           ===================================================================== -->
+      <article
+        id="plate-3"
+        data-section-label="§ 01 PLATE III · ATTRACTOR"
+        data-mode="5"
+        class="plate-section rule-t min-h-[78vh] py-16 sm:py-24 flex items-center"
+      >
+        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <!-- Left Marginalia -->
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+            <div class="text-accent">PLATE III</div>
+            <div>FIELD: STRANGE ATTRACTOR</div>
+            <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
+              3D RK4 chaotic phase-space manifold &amp; Lyapunov divergence.
+            </div>
+          </div>
+
+          <!-- Center-Left Editorial Plate -->
+          <div class="lg:col-span-6">
+            <div class="editorial-veil p-5 sm:p-8 space-y-6">
+              <div class="flex flex-wrap items-baseline justify-between gap-2 rule-b pb-3">
+                <span id="plate-3-kicker" class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+                  SYNCING REPO 03 FROM GITHUB...
+                </span>
+                <span class="font-mono-spec text-[10px] tracking-[0.08em] text-muted">
+                  CLICK CANVAS TO CYCLE ATTRACTOR
+                </span>
+              </div>
+
+              <div>
+                <h3 id="plate-3-title" class="font-serif-math text-2xl sm:text-3xl font-normal text-ink leading-snug">
+                  Amazon clone
+                </h3>
+                <div id="plate-3-meta" class="mt-2 font-mono-spec text-[10px] sm:text-[11px] tracking-[0.06em] text-muted">
+                  Amazon-clone · CSS · github.com/SachinMaurya24
+                </div>
+              </div>
+
+              <div id="plate-3-desc" data-preserve-desc="true" class="font-serif-math text-[16px] sm:text-[17px] leading-[1.68] text-ink/90 space-y-3">
+                <p>
+                  A structured e-commerce storefront interface modeled after Amazon's multi-tier navigation, search bar, and department grid, built from scratch to master layout density and visual hierarchy.
+                </p>
+                <p>
+                  Implements responsive product-card shelves, promotional hero banners, category carousels, and clean CSS grid/flexbox alignment across desktop and mobile viewports.
+                </p>
+                <p class="text-muted text-[15px]">
+                  Published open-source under <span class="font-mono-spec text-[12px] text-ink">github.com/SachinMaurya24</span> with a live production deployment on Vercel.
+                </p>
+              </div>
+
+              <!-- Big Demo CTA & GitHub Links -->
+              <div class="rule-t pt-5 space-y-3">
+                <a
+                  id="plate-3-demo-link"
+                  href="https://amazonclone-pi-neon.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hairline-btn is-active w-full flex items-center justify-between px-5 py-3.5 font-mono-spec text-[12px] tracking-[0.14em] uppercase"
+                >
+                  <span>LAUNCH LIVE DEMO</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase pt-1">
+                  <a
+                    id="plate-3-repo-link"
+                    href="https://github.com/SachinMaurya24/Amazon-clone"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-ink"
+                  >
+                    Amazon-clone Repository ↗
+                  </a>
+                  <a
+                    href="https://github.com/SachinMaurya24"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-muted"
+                  >
+                    github.com/SachinMaurya24 ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden lg:block lg:col-span-4"></div>
+        </div>
+      </article>
+
+      <!-- =====================================================================
+           PLATE IV · GITHUB REPO 04 + HELMHOLTZ CHLADNI NODAL EIGENMODES
+           ===================================================================== -->
+      <article
+        id="plate-4"
+        data-section-label="§ 01 PLATE IV · EIGENMODES"
+        data-mode="6"
+        class="plate-section rule-t min-h-[78vh] py-16 sm:py-24 flex items-center"
+      >
+        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <!-- Left Marginalia -->
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+            <div class="text-accent">PLATE IV</div>
+            <div>FIELD: HELMHOLTZ EIGENMODES</div>
+            <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
+              Spectral Chladni nodal contours &amp; resonant particle loci.
+            </div>
+          </div>
+
+          <!-- Center-Left Editorial Plate -->
+          <div class="lg:col-span-6">
+            <div class="editorial-veil p-5 sm:p-8 space-y-6">
+              <div class="flex flex-wrap items-baseline justify-between gap-2 rule-b pb-3">
+                <span id="plate-4-kicker" class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+                  SYNCING REPO 04 FROM GITHUB...
+                </span>
+                <span class="font-mono-spec text-[10px] tracking-[0.08em] text-muted">
+                  CLICK CANVAS TO CYCLE (n, m) MODE
+                </span>
+              </div>
+
+              <div>
+                <h3 id="plate-4-title" class="font-serif-math text-2xl sm:text-3xl font-normal text-ink leading-snug">
+                  Atcoder profile checker
+                </h3>
+                <div id="plate-4-meta" class="mt-2 font-mono-spec text-[10px] sm:text-[11px] tracking-[0.06em] text-muted">
+                  Atcoder-profile-checker · JavaScript · github.com/SachinMaurya24
+                </div>
+              </div>
+
+              <div id="plate-4-desc" data-preserve-desc="true" class="font-serif-math text-[16px] sm:text-[17px] leading-[1.68] text-ink/90 space-y-3">
+                <p>
+                  A competitive programming analytics tool built to surface the AtCoder metrics that standard profile pages omit—including total accepted problems, difficulty-tier distributions, and submission consistency.
+                </p>
+                <p>
+                  Queries public AtCoder user data to aggregate contest performance, rating progression, and problem-solving breakdowns in a fast, distraction-free dashboard.
+                </p>
+                <p class="text-muted text-[15px]">
+                  Published open-source under <span class="font-mono-spec text-[12px] text-ink">github.com/SachinMaurya24</span> with an instant live web deployment.
+                </p>
+              </div>
+
+              <!-- Big Demo CTA & GitHub Links -->
+              <div class="rule-t pt-5 space-y-3">
+                <a
+                  id="plate-4-demo-link"
+                  href="https://atcoder-profile-checker.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hairline-btn is-active w-full flex items-center justify-between px-5 py-3.5 font-mono-spec text-[12px] tracking-[0.14em] uppercase"
+                >
+                  <span>LAUNCH LIVE DEMO</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase pt-1">
+                  <a
+                    id="plate-4-repo-link"
+                    href="https://github.com/SachinMaurya24/Atcoder-profile-checker"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-ink"
+                  >
+                    Atcoder-profile-checker Repository ↗
+                  </a>
+                  <a
+                    href="https://github.com/SachinMaurya24"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono-action py-1 text-muted"
+                  >
+                    github.com/SachinMaurya24 ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden lg:block lg:col-span-4"></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- =======================================================================
+         § 02 LIVE GITHUB REPOSITORY INDEX — github.com/SachinMaurya24
+         ======================================================================= -->
+    <section
+      id="repositories"
+      data-section-label="§ 02 GITHUB INDEX"
+      data-mode="0"
+      class="rule-t py-20 sm:py-28"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
+        <div class="lg:col-span-2 font-mono-spec text-[11px] tracking-[0.14em] uppercase text-accent pt-1">
+          § 02 / GITHUB
+        </div>
+        <div class="lg:col-span-7">
+          <div class="editorial-veil p-5 sm:px-8 sm:py-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase">
+              <span id="gh-sync-status" class="text-accent">CONNECTING TO GITHUB...</span>
+              <a
+                href="https://github.com/SachinMaurya24"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mono-action text-muted"
+              >
+                github.com/SachinMaurya24 ↗
+              </a>
+            </div>
+            <h2 class="font-serif-math text-3xl sm:text-4xl font-normal tracking-[-0.015em] text-ink">
+              Public Repository Index
+            </h2>
+            <p class="mt-3 font-serif-math text-[16px] sm:text-[17px] leading-[1.6] text-muted">
+              Synced live from <span class="font-mono-spec text-[13px] text-ink">SachinMaurya24</span> on GitHub—reflecting actual published repositories without synthetic placeholders.
+            </p>
+          </div>
+        </div>
+        <div class="lg:col-span-3 flex items-end">
+          <div class="editorial-veil w-full rule-t rule-b p-4 grid grid-cols-3 gap-2 font-mono-spec text-[10px] tracking-[0.08em] uppercase tabular-nums">
+            <div>
+              <div class="text-muted">REPOS</div>
+              <div id="gh-stat-repos" class="text-ink text-[15px] mt-0.5">—</div>
+            </div>
+            <div>
+              <div class="text-muted">LANGS</div>
+              <div id="gh-stat-langs" class="text-ink text-[15px] mt-0.5">—</div>
+            </div>
+            <div>
+              <div class="text-muted">STARS</div>
+              <div id="gh-stat-stars" class="text-accent text-[15px] mt-0.5">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Filter Toolbar & Live Ledger -->
+      <div class="editorial-veil rule-t">
+        <div class="rule-b px-5 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+          <div id="gh-lang-filters" class="flex flex-wrap items-center gap-1.5"></div>
+          <div class="flex flex-wrap items-center gap-2 font-mono-spec text-[10px] tracking-[0.1em] uppercase">
+            <input
+              id="gh-search"
+              type="search"
+              placeholder="Filter repositories..."
+              class="hairline-input w-44 sm:w-52"
+              aria-label="Filter GitHub repositories"
+            />
+            <button id="gh-sort-btn" type="button" class="hairline-btn px-2.5 py-1.5">
+              [ SORT: RECENT ]
+            </button>
+            <button id="gh-forks-btn" type="button" class="hairline-btn px-2.5 py-1.5">
+              [ FORKS: HIDDEN ]
+            </button>
+          </div>
+        </div>
+
+        <div id="gh-repo-list" aria-live="polite">
+          <div class="p-6 font-mono-spec text-[11px] text-muted">
+            Loading live repositories from github.com/SachinMaurya24...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         § 03 FOUNDATIONS — AXIOMS & DISCIPLINE (SWISS 3-COLUMN LEDGER)
+         ======================================================================= -->
+    <section
+      id="foundations"
+      data-section-label="§ 03 FOUNDATIONS"
+      data-mode="0"
+      class="rule-t py-20 sm:py-28"
+    >
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        <div class="lg:col-span-2 font-mono-spec text-[11px] tracking-[0.14em] uppercase text-accent pt-1">
+          § 03 / AXIOMS
+        </div>
+        <div class="lg:col-span-7">
+          <div class="editorial-veil p-5 sm:px-8 sm:py-6">
+            <h2 class="font-serif-math text-3xl sm:text-4xl font-normal tracking-[-0.015em] text-ink">
+              Axioms &amp; Discipline
+            </h2>
+            <p class="mt-3 font-serif-math text-[16px] sm:text-[17px] leading-[1.6] text-muted">
+              A concise ledger of the computational foundations, mathematical tools, and engineering methods underlying every simulation and system.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swiss 3-Column Hairline Ledger -->
+      <div class="editorial-veil rule-t rule-b grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--rule)]">
+        <div class="p-6 sm:p-8 space-y-5">
+          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+            AXIOM I
+          </div>
+          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">
+            Numerical &amp; Systems Engineering
+          </h3>
+          <ul class="space-y-2.5 font-mono-spec text-[11px] leading-relaxed text-muted">
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">C++20 / Low-Level Systems</span>
+              <span>01</span>
+            </li>
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Spatial Partitioning (Quad/Octree)</span>
+              <span>02</span>
+            </li>
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Numerical Integration (RK4 / Verlet)</span>
+              <span>03</span>
+            </li>
+            <li class="flex justify-between pb-1">
+              <span class="text-ink">Cache-Aware Performance Tuning</span>
+              <span>04</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-5">
+          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+            AXIOM II
+          </div>
+          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">
+            Mathematical Foundations
+          </h3>
+          <ul class="space-y-2.5 font-mono-spec text-[11px] leading-relaxed text-muted">
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Probability &amp; Measure Intuition</span>
+              <span>01</span>
+            </li>
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Stochastic Processes &amp; SDEs</span>
+              <span>02</span>
+            </li>
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Combinatorics &amp; Counting</span>
+              <span>03</span>
+            </li>
+            <li class="flex justify-between pb-1">
+              <span class="text-ink">Graph Theory &amp; Shortest Paths</span>
+              <span>04</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-5">
+          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+            AXIOM III
+          </div>
+          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">
+            Research &amp; Architecture
+          </h3>
+          <ul class="space-y-2.5 font-mono-spec text-[11px] leading-relaxed text-muted">
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Experimental Benchmarking</span>
+              <span>01</span>
+            </li>
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Contest Problem Authoring</span>
+              <span>02</span>
+            </li>
+            <li class="flex justify-between rule-b pb-2">
+              <span class="text-ink">Deterministic State Systems</span>
+              <span>03</span>
+            </li>
+            <li class="flex justify-between pb-1">
+              <span class="text-ink">TypeScript &amp; Precision Web UI</span>
+              <span>04</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         § 04 COLOPHON & PROOF END
+         ======================================================================= -->
+    <footer
+      id="colophon"
+      data-section-label="§ 04 COLOPHON"
+      data-mode="0"
+      class="rule-t pt-14 pb-24"
+    >
+      <div class="editorial-veil p-6 sm:p-8 grid grid-cols-1 md:grid-cols-12 gap-10 items-start">
+        <!-- Left Colophon Details -->
+        <div class="md:col-span-6 space-y-4">
+          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
+            § 04 — COLOPHON
+          </div>
+          <div class="font-serif-math text-xl text-ink">
+            Sachin Maurya
+          </div>
+          <div class="font-mono-spec text-[11px] tracking-[0.06em] text-muted">
+            Delhi, India · B.Tech CSE (MAIT)
+          </div>
+          <p class="font-serif-math italic text-[15px] leading-relaxed text-muted max-w-md pt-1">
+            Set in STIX Two Text &amp; IBM Plex Mono. All five mathematical fields—scalar iso-contours, Barnes–Hut quadtrees, Ornstein–Uhlenbeck trajectories, Dijkstra geodesic trees, and laminar latency queues—are computed live in real time without pre-rendered media.
+          </p>
+          <div class="rule-t pt-3 font-mono-spec text-[10px] tracking-[0.08em] text-muted">
+            KEYS: <span class="text-ink">0–4</span> Lock Field · <span class="text-ink">Space</span> Pause · <span class="text-ink">I</span> Inspect · <span class="text-ink">T</span> Theme · <span class="text-ink">R</span> Reset
+          </div>
+        </div>
+
+        <!-- Right Indices & Q.E.D. Tombstone -->
+        <div class="md:col-span-6 flex flex-col justify-between h-full space-y-8 md:items-end">
+          <div class="w-full md:w-auto space-y-2.5 font-mono-spec text-[11px] tracking-[0.08em] uppercase">
+            <div class="text-muted text-[10px] tracking-[0.14em] md:text-right mb-3">EXTERNAL INDICES</div>
+            <div class="flex flex-col md:items-end gap-2.5">
+              <a
+                href="https://github.com/SachinMaurya24"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mono-action py-0.5 inline-flex items-center gap-2"
+              >
+                <span>GitHub — SachinMaurya24</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                href="https://codeforces.com/profile/Borachii"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mono-action py-0.5 inline-flex items-center gap-2"
+              >
+                <span>Codeforces — Borachii</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                href="https://leetcode.com/u/Borachi18x24/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mono-action py-0.5 inline-flex items-center gap-2"
+              >
+                <span>LeetCode — Borachi18x24</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="w-full rule-t pt-4 flex items-center justify-between md:justify-end gap-6 font-mono-spec text-[11px] tracking-[0.14em] text-ink">
+            <span class="text-muted text-[10px]">THE LIVING MANIFOLD</span>
+            <span class="text-accent font-medium">Q.E.D. □</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Modular Living Manifold Engine (ordered for both file:// and http://) -->
+  <script defer src="js/state.js"></script>
+  <script defer src="js/fields/scalar-field.js"></script>
+  <script defer src="js/fields/nbody-field.js"></script>
+  <script defer src="js/fields/stochastic-field.js"></script>
+  <script defer src="js/fields/graph-field.js"></script>
+  <script defer src="js/fields/flow-field.js"></script>
+  <script defer src="js/fields/attractor-field.js"></script>
+  <script defer src="js/fields/eigenmode-field.js"></script>
+  <script defer src="js/github.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/main.js"></script>
+</body>
+</html>

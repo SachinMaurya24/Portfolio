@@ -1,0 +1,83 @@
+/* =========================================================================
+   DESIGN TOKENS: DUAL SURFACE MONOGRAPH SYSTEM (OBSIDIAN / ARCHIVAL)
+   Strict Visual Rigor: Zero Border Radius, Zero Shadows, Zero CSS Gradients
+   ========================================================================= */
+
+:root,
+[data-theme="obsidian"] {
+  --bg: #0A0B0D;
+  --ink: #EAE8E3;
+  --ink-muted: #8A8984;
+  --rule: rgba(234, 232, 227, 0.13);
+  --rule-strong: rgba(234, 232, 227, 0.28);
+  --accent: #C9B896;
+  --accent-soft: rgba(201, 184, 150, 0.14);
+  --surface-veil: rgba(10, 11, 13, 0.80);
+  --header-bg: rgba(10, 11, 13, 0.92);
+}
+
+[data-theme="archival"] {
+  --bg: #F6F4EE;
+  --ink: #141517;
+  --ink-muted: #686660;
+  --rule: rgba(20, 21, 23, 0.14);
+  --rule-strong: rgba(20, 21, 23, 0.30);
+  --accent: #8E2F24;
+  --accent-soft: rgba(142, 47, 36, 0.10);
+  --surface-veil: rgba(246, 244, 238, 0.84);
+  --header-bg: rgba(246, 244, 238, 0.94);
+}
+
+/* Strict zero radius & shadow enforcement across the entire treatise */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: 'STIX Two Text', 'EB Garamond', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+  transition: background-color 280ms ease, color 280ms ease;
+}
+
+::selection {
+  background-color: var(--accent-soft);
+  color: var(--ink);
+}
+
+.font-serif-math {
+  font-family: 'STIX Two Text', 'EB Garamond', Georgia, serif;
+}
+
+.font-mono-spec {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hairline Structural Rules */
+.rule-t { border-top: 1px solid var(--rule); }
+.rule-b { border-bottom: 1px solid var(--rule); }
+.rule-l { border-left: 1px solid var(--rule); }
+.rule-r { border-right: 1px solid var(--rule); }
+.rule-all { border: 1px solid var(--rule); }
+.rule-l-accent { border-left: 1px solid var(--accent); }
+
+.text-ink { color: var(--ink); }
+.text-muted { color: var(--ink-muted); }
+.text-accent { color: var(--accent); }

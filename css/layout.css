@@ -1,0 +1,212 @@
+/* =========================================================================
+   SWISS EDITORIAL MONOGRAPH LAYOUT, MASTHEAD & CANVAS LAYERING
+   ========================================================================= */
+
+/* Full-viewport living mathematical canvas */
+#manifold-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  display: block;
+  cursor: crosshair;
+}
+
+/* Breathable non-card veil behind editorial prose for effortless legibility */
+.editorial-veil {
+  background-color: var(--surface-veil);
+  border: 1px solid var(--rule);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background-color 280ms ease, opacity 320ms ease, border-color 220ms ease;
+}
+
+/* Active plate highlight when its mathematical domain is live */
+.editorial-veil.is-active-plate {
+  border-color: var(--rule-strong);
+  border-left: 2px solid var(--accent);
+}
+
+/* Drafting-style architectural corner ticks (pure 1px hairline borders) */
+.drafting-frame {
+  position: relative;
+}
+
+.drafting-frame::before,
+.drafting-frame::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  transition: border-color 220ms ease;
+}
+
+.drafting-frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+
+.drafting-frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid var(--accent);
+  border-right: 1px solid var(--accent);
+}
+
+/* Hero display scale */
+.hero-title {
+  font-size: clamp(2.75rem, 5.4vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+}
+
+/* Monograph equation strip (KaTeX) */
+.formula-strip {
+  border-left: 1px solid var(--accent);
+  padding: 0.45rem 0 0.45rem 0.9rem;
+  color: var(--ink);
+  overflow-x: auto;
+}
+
+.formula-strip .katex-display {
+  margin: 0.25rem 0 0 0;
+  text-align: left;
+}
+
+.formula-strip .katex {
+  font-size: 0.96em;
+  color: var(--ink);
+}
+
+/* Let clicks pass through empty grid gutters straight to the live canvas */
+main {
+  pointer-events: none;
+  transition: opacity 320ms ease;
+}
+
+main .editorial-veil,
+main a,
+main button,
+main input,
+main aside,
+footer {
+  pointer-events: auto;
+}
+
+footer {
+  transition: opacity 320ms ease;
+}
+
+/* Sticky minimal masthead */
+.masthead {
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--rule);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background-color 280ms ease, border-color 280ms ease;
+}
+
+/* 1px architectural reading progress hairline beneath masthead */
+.scroll-progress-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: transparent;
+  pointer-events: none;
+}
+
+#scroll-progress-bar {
+  height: 1px;
+  width: 0%;
+  background-color: var(--accent);
+  transition: width 80ms linear;
+}
+
+/* Inspect Field Mode: fades editorial typography to reveal full viewport math */
+body.inspect-field main,
+body.inspect-field footer {
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+body.inspect-field main .editorial-veil,
+body.inspect-field main a,
+body.inspect-field main button,
+body.inspect-field main input,
+body.inspect-field main aside,
+body.inspect-field footer {
+  pointer-events: none;
+}
+
+/* Live indicator square pulse (subtle, austere) */
+@keyframes subtlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.live-square {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background-color: var(--accent);
+  animation: subtlePulse 2.4s ease-in-out infinite;
+}
+
+body.is-paused .live-square {
+  animation: none;
+  opacity: 0.35;
+}
+
+/* Floating interactive field dock (bottom-right) */
+.field-dock {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 35;
+  background-color: var(--header-bg);
+  border: 1px solid var(--rule-strong);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background-color 280ms ease, border-color 280ms ease;
+}
+
+@media (min-width: 640px) {
+  .field-dock {
+    right: 2rem;
+    bottom: 1.5rem;
+  }
+}
+
+/* Toast notification for subtle canvas feedback (e.g. "Well placed", "Switch faulted") */
+.canvas-toast {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 35;
+  background-color: var(--header-bg);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 0.35rem 0.65rem;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.canvas-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (min-width: 640px) {
+  .canvas-toast {
+    left: 2rem;
+    bottom: 1.5rem;
+  }
+}
