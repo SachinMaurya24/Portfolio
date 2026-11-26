@@ -1,7 +1,7 @@
 /* =========================================================================
    AMBIENT BACKGROUND AUDIO ENGINE
    Track: Deep Focus (Ambient Neo-Classical).mp3
-   Balanced background volume (28%), smooth fade-in/out, mute toggle & M key
+   Default ON, balanced 28% ambient volume, smooth fades, mute toggle & M key
    ========================================================================= */
 (function (global) {
   'use strict';
@@ -11,7 +11,6 @@
   const TARGET_VOLUME = 0.28; // Balanced ambient level: present yet unobtrusive
   const FADE_IN_MS = 900;
   const FADE_OUT_MS = 260;
-  const STORAGE_KEY = 'manifold-audio-muted';
 
   // Primary location inside /audio, with root-folder fallback
   const AUDIO_SOURCES = [
@@ -19,9 +18,11 @@
     './Deep%20Focus%20(Ambient%20Neo-Classical).mp3'
   ];
 
+  const UNLOCK_EVENTS = ['pointerdown', 'mousedown', 'touchstart', 'click', 'keydown'];
+
   let audio = null;
   let sourceIndex = 0;
-  let isMuted = false;
+  let isMuted = false; // Always ON by default
   let isPlaying = false;
   let awaitingGesture = false;
   let loadFailed = false;
@@ -29,22 +30,6 @@
 
   let headerBtn = null;
   let dockBtn = null;
-
-  function loadSavedMutePref() {
-    try {
-      return localStorage.getItem(STORAGE_KEY) === 'true';
-    } catch (_) {
-      return false;
-    }
-  }
-
-  function saveMutePref(muted) {
-    try {
-      localStorage.setItem(STORAGE_KEY, String(muted));
-    } catch (_) {
-      // Ignore storage errors
-    }
-  }
 
   function cancelFade() {
     if (fadeRaf !== null) {
@@ -67,7 +52,6 @@
 
     function step(now) {
       const t = Math.min(1, (now - start) / durationMs);
-      // Smooth ease-out curve
       const eased = 1 - Math.pow(1 - t, 2);
       audio.volume = Math.max(0, Math.min(1, fromVolume + (toVolume - fromVolume) * eased));
       if (t < 1) {
@@ -82,26 +66,23 @@
   }
 
   function updateButtons() {
-    const active = isPlaying && !isMuted;
+    const soundOn = !isMuted;
 
     if (headerBtn) {
-      headerBtn.classList.toggle('is-active', active);
-      headerBtn.setAttribute('aria-pressed', String(!isMuted));
+      headerBtn.classList.toggle('is-active', soundOn);
+      headerBtn.setAttribute('aria-pressed', String(soundOn));
       if (isMuted) {
         headerBtn.textContent = '[ ✕ MUTED ]';
         headerBtn.title = 'Unmute background music (M)';
-      } else if (active) {
+      } else {
         headerBtn.textContent = '[ ♫ SOUND: ON ]';
         headerBtn.title = 'Mute background music (M)';
-      } else {
-        headerBtn.textContent = '[ ♫ SOUND ]';
-        headerBtn.title = 'Start or mute background music (M)';
       }
     }
 
     if (dockBtn) {
-      dockBtn.classList.toggle('is-active', active);
-      dockBtn.setAttribute('aria-pressed', String(!isMuted));
+      dockBtn.classList.toggle('is-active', soundOn);
+      dockBtn.setAttribute('aria-pressed', String(soundOn));
       dockBtn.textContent = isMuted ? '✕' : '♫';
       dockBtn.title = isMuted ? 'Unmute background music (M)' : 'Mute background music (M)';
     }
@@ -112,13 +93,15 @@
 
     if (loadFailed) {
       if (showToast && Manifold.notify) {
-        Manifold.notify('ADD MP3 TO /audio FOLDER TO PLAY');
+        Manifold.notify('AUDIO FILE NOT FOUND IN /audio');
       }
       return;
     }
 
     audio.muted = false;
-    audio.volume = 0;
+    if (audio.paused) {
+      audio.volume = 0;
+    }
 
     const playPromise = audio.play();
     if (playPromise && typeof playPromise.then === 'function') {
@@ -134,7 +117,7 @@
           }
         })
         .catch((err) => {
-          if (err && err.name === 'NotAllowedError') {
+          if (err && (err.name === 'NotAllowedError' || err.name === 'AbortError')) {
             awaitingGesture = true;
             attachGestureUnlock();
             updateButtons();
@@ -142,6 +125,7 @@
         });
     } else {
       isPlaying = true;
+      awaitingGesture = false;
       audio.volume = TARGET_VOLUME;
       updateButtons();
     }
@@ -151,7 +135,6 @@
     isMuted = true;
     awaitingGesture = false;
     detachGestureUnlock();
-    saveMutePref(true);
 
     if (audio && isPlaying) {
       fadeVolume(0, FADE_OUT_MS, () => {
@@ -176,7 +159,6 @@
 
   function unmuteAudio(showToast) {
     isMuted = false;
-    saveMutePref(false);
     startPlayback(showToast);
     updateButtons();
   }
@@ -185,7 +167,7 @@
     if (isMuted) {
       unmuteAudio(true);
     } else if (!isPlaying && awaitingGesture) {
-      // First click on the sound button when autoplay was blocked starts playback
+      // Browser held autoplay until first click: start playback immediately
       startPlayback(true);
     } else {
       muteAudio(true);
@@ -193,7 +175,6 @@
   }
 
   function onFirstUserGesture(e) {
-    // If user clicked the audio button itself, let its click handler manage state
     if (e && e.target && (e.target === headerBtn || e.target === dockBtn)) {
       return;
     }
@@ -203,20 +184,29 @@
   }
 
   function attachGestureUnlock() {
-    window.addEventListener('pointerdown', onFirstUserGesture, { passive: true });
-    window.addEventListener('keydown', onFirstUserGesture, { passive: true });
+    UNLOCK_EVENTS.forEach((evt) => {
+      window.addEventListener(evt, onFirstUserGesture, { capture: true, passive: true });
+    });
   }
 
   function detachGestureUnlock() {
-    window.removeEventListener('pointerdown', onFirstUserGesture);
-    window.removeEventListener('keydown', onFirstUserGesture);
+    UNLOCK_EVENTS.forEach((evt) => {
+      window.removeEventListener(evt, onFirstUserGesture, { capture: true });
+    });
   }
 
   function initAudioElement() {
     audio = new Audio();
     audio.loop = true;
+    audio.autoplay = true;
     audio.preload = 'auto';
     audio.volume = 0;
+
+    audio.addEventListener('canplay', () => {
+      if (!isMuted && !isPlaying && !awaitingGesture) {
+        startPlayback(false);
+      }
+    }, { once: true });
 
     audio.addEventListener('error', () => {
       if (sourceIndex + 1 < AUDIO_SOURCES.length) {
@@ -255,14 +245,11 @@
   }
 
   function init() {
-    isMuted = loadSavedMutePref();
+    isMuted = false; // Always start ON by default
     initAudioElement();
     bindControls();
     updateButtons();
-
-    if (!isMuted) {
-      startPlayback(false);
-    }
+    startPlayback(false);
   }
 
   Manifold.audio = {
