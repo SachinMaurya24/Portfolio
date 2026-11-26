@@ -78,6 +78,16 @@
         </nav>
 
         <button
+          id="audio-btn"
+          type="button"
+          class="hairline-btn px-2 py-1 text-[10px] tracking-[0.1em] uppercase"
+          title="Toggle background music (M)"
+          aria-pressed="true"
+        >
+          [ ♫ SOUND ]
+        </button>
+
+        <button
           id="pause-btn"
           type="button"
           class="hidden md:inline-block hairline-btn px-2 py-1 text-[10px] tracking-[0.1em] uppercase"
@@ -130,6 +140,7 @@
         <button type="button" data-dock-mode="6" class="mode-pill" title="Mode 6: Helmholtz Nodal Eigenmodes (Key 6)">VI</button>
       </div>
       <div class="flex items-center gap-1.5">
+        <button id="dock-audio-btn" type="button" class="mode-pill" title="Mute / Unmute background music (M)" aria-pressed="true">♫</button>
         <button id="dock-pause-btn" type="button" class="mode-pill" title="Pause / Resume (Space)">❚❚</button>
         <button id="dock-reset-btn" type="button" class="mode-pill" title="Reset active field (R)">↺</button>
       </div>
@@ -1092,7 +1103,7 @@
             Set in STIX Two Text &amp; IBM Plex Mono. All seven mathematical fields—scalar iso-contours, Barnes–Hut quadtrees, Ornstein–Uhlenbeck SDEs, Fourier harmonic epicycles, laminar latency queues, 3D strange attractors, and Helmholtz Chladni eigenmodes—are computed live in real time without pre-rendered media.
           </p>
           <div class="rule-t pt-3 font-mono-spec text-[10px] tracking-[0.08em] text-muted">
-            KEYS: <span class="text-ink">0–6</span> Lock Field · <span class="text-ink">Space</span> Pause · <span class="text-ink">I</span> Inspect · <span class="text-ink">T</span> Theme · <span class="text-ink">R</span> Reset
+            KEYS: <span class="text-ink">0–6</span> Lock Field · <span class="text-ink">Space</span> Pause · <span class="text-ink">M</span> Mute · <span class="text-ink">I</span> Inspect · <span class="text-ink">T</span> Theme · <span class="text-ink">R</span> Reset
           </div>
         </div>
 
@@ -1151,6 +1162,7 @@
   <script defer src="js/fields/eigenmode-field.js"></script>
   <script defer src="js/drafting-chrome.js"></script>
   <script defer src="js/github.js"></script>
+  <script defer src="js/audio.js"></script>
   <script defer src="js/ui.js"></script>
   <script defer src="js/main.js"></script>
 </body>

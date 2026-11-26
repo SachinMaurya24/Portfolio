@@ -133,6 +133,10 @@
         Manifold.github.init();
       }
 
+      if (Manifold.audio) {
+        Manifold.audio.init();
+      }
+
       animate();
     } catch (err) {
       console.error('Manifold initialization error:', err);
