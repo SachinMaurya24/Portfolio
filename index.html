@@ -321,13 +321,20 @@
       >
         <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           <!-- Left Marginalia -->
-          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2.5 pt-2">
             <div class="text-accent">PLATE I</div>
             <div>FIELD: N-BODY</div>
             <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
               Live recursive quadtree gravitational field paired with Repository 01.
             </div>
-            <div id="status-mode-1" class="pt-2 flex items-center gap-2 text-muted">
+            <div class="sparkline-frame">
+              <div class="flex justify-between text-[8.5px] tracking-[0.08em] text-muted mb-1">
+                <span>Q-NODES(t)</span>
+                <span class="text-accent">O(N log N)</span>
+              </div>
+              <canvas id="spark-nbody" class="sparkline-canvas" width="160" height="44" aria-label="Quadtree node count sparkline"></canvas>
+            </div>
+            <div class="plate-mode-status pt-1 flex items-center gap-2 text-muted">
               <span class="mode-dot inline-block w-1.5 h-1.5 bg-[var(--rule-strong)]"></span>
               <span class="mode-state-label">STANDBY</span>
             </div>
@@ -463,21 +470,46 @@
       </article>
 
       <!-- =====================================================================
-           PLATE II · GITHUB REPO 02 + LIVE STOCHASTIC DIFFUSION FIELD
+           PLATE II · COMPETITIVE PROGRAMMING (CODEFORCES: BORACHII) + FOURIER HARMONIC EPICYCLES (MODE 3)
            ===================================================================== -->
       <article
         id="plate-2"
-        data-section-label="§ 01 PLATE II · POKE1PLAYERGAME"
+        data-section-label="§ 01 PLATE II · COMPETITIVE PROGRAMMING"
         data-mode="3"
         class="plate-section rule-t min-h-[78vh] py-16 sm:py-24 flex items-center"
       >
         <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           <!-- Left Marginalia -->
-          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2.5 pt-2">
             <div class="text-accent">PLATE II</div>
-            <div>TYPE: TYPESCRIPT / WEB</div>
+            <div>FIELD: HARMONICS</div>
             <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
-              Standalone repository entry · Fourier epicycles &amp; Lissajous backdrop.
+              Complex Fourier epicycles, polar graticule &amp; Frenet tangent/normal frame.
+            </div>
+            <div class="rule-t pt-2 space-y-1 tabular-nums text-[9.5px]">
+              <div class="flex justify-between gap-1">
+                <span>PRESET</span>
+                <span id="tel-fourier-preset" class="text-ink truncate">LISSAJOUS 3:2</span>
+              </div>
+              <div class="flex justify-between">
+                <span>PHASE θ</span>
+                <span id="tel-fourier-theta" class="text-accent">0.00 rad</span>
+              </div>
+              <div class="flex justify-between">
+                <span>MODULUS |z|</span>
+                <span id="tel-fourier-radius" class="text-ink">0.00</span>
+              </div>
+            </div>
+            <div class="sparkline-frame">
+              <div class="flex justify-between text-[8.5px] tracking-[0.08em] text-muted mb-1">
+                <span>|γ(t)| / R</span>
+                <span class="text-accent">EPICYCLE</span>
+              </div>
+              <canvas id="spark-fourier" class="sparkline-canvas" width="160" height="44" aria-label="Fourier radius modulus sparkline"></canvas>
+            </div>
+            <div class="plate-mode-status pt-1 flex items-center gap-2 text-muted">
+              <span class="mode-dot inline-block w-1.5 h-1.5 bg-[var(--rule-strong)]"></span>
+              <span class="mode-state-label">STANDBY</span>
             </div>
           </div>
 
@@ -486,61 +518,70 @@
             <div class="editorial-veil p-5 sm:p-8 space-y-6">
               <div class="flex flex-wrap items-baseline justify-between gap-2 rule-b pb-3">
                 <span id="plate-2-kicker" class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
-                  SYNCING REPO 02 FROM GITHUB...
+                  CODEFORCES · BORACHII · COMPETITIVE PROGRAMMING
+                </span>
+                <span class="font-mono-spec text-[10px] tracking-[0.08em] text-muted">
+                  CLICK CANVAS TO CYCLE PRESET
                 </span>
               </div>
 
               <div>
                 <h3 id="plate-2-title" class="font-serif-math text-2xl sm:text-3xl font-normal text-ink leading-snug">
-                  Poke1PlayerGame
+                  Competitive Programming
                 </h3>
                 <div id="plate-2-meta" class="mt-2 font-mono-spec text-[10px] sm:text-[11px] tracking-[0.06em] text-muted">
-                  Poke1PlayerGame · TypeScript · github.com/SachinMaurya24
+                  Borachii · Codeforces · C++20 · codeforces.com/profile/Borachii
                 </div>
               </div>
 
               <div id="plate-2-desc" data-preserve-desc="true" class="font-serif-math text-[16px] sm:text-[17px] leading-[1.68] text-ink/90 space-y-3">
                 <p>
-                  An interactive single-player Pokémon battle and exploration web game built in TypeScript, featuring turn-based combat mechanics, type-effectiveness calculations, and responsive state transitions.
+                  Algorithmic problem solving and timed contest engineering under the Codeforces handle <span class="font-mono-spec text-[14px] text-ink">Borachii</span>—focusing on C++20, graph theory, dynamic programming, number theory, and discrete data structures.
                 </p>
                 <p>
-                  Implements modular game-loop architecture, sprite rendering, move-set selection, and HP/status progression in a lightweight browser-native client.
-                </p>
-                <p class="text-muted text-[15px]">
-                  Published open-source under <span class="font-mono-spec text-[12px] text-ink">github.com/SachinMaurya24</span> with a live playable deployment on Vercel.
+                  Combines formal proof intuition with tight asymptotic bounds, adversarial stress testing, and reproducible contest problem authoring.
                 </p>
               </div>
 
-              <!-- Big Demo CTA & GitHub Links -->
-              <div class="rule-t pt-5 space-y-3">
-                <a
-                  id="plate-2-demo-link"
-                  href="https://poke1-player-game.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hairline-btn is-active w-full flex items-center justify-between px-5 py-3.5 font-mono-spec text-[12px] tracking-[0.14em] uppercase"
-                >
-                  <span>LAUNCH LIVE DEMO</span>
-                  <span aria-hidden="true">↗</span>
-                </a>
-                <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase pt-1">
-                  <a
-                    id="plate-2-repo-link"
-                    href="https://github.com/SachinMaurya24/Poke1PlayerGame"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="mono-action py-1 text-ink"
-                  >
-                    Poke1PlayerGame Repository ↗
-                  </a>
-                  <a
-                    href="https://github.com/SachinMaurya24"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="mono-action py-1 text-muted"
-                  >
-                    github.com/SachinMaurya24 ↗
-                  </a>
+              <div class="formula-strip">
+                <div class="font-mono-spec text-[9px] tracking-[0.14em] uppercase text-muted">
+                  Eq. II.1 — Complex Fourier Epicycle Synthesis
+                </div>
+                <div class="text-[14px]">
+                  $$\gamma(t) = \sum_{k=1}^{N} r_k\, e^{i(\omega_k t + \phi_k)}, \quad \mathbf{T}(t) = \frac{\dot{\gamma}(t)}{\|\dot{\gamma}(t)\|}$$
+                </div>
+              </div>
+
+              <div class="rule-t rule-b py-4 space-y-4">
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-fourier-n" class="uppercase tracking-[0.1em] text-ink">
+                      N <span class="text-muted">(Active Harmonics)</span>
+                    </label>
+                    <span id="val-fourier-n" class="text-accent tabular-nums">3</span>
+                  </div>
+                  <input id="slider-fourier-n" type="range" min="1" max="5" step="1" value="3" class="manifold-slider" />
+                </div>
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-fourier-speed" class="uppercase tracking-[0.1em] text-ink">
+                      ω <span class="text-muted">(Angular Velocity Scale)</span>
+                    </label>
+                    <span id="val-fourier-speed" class="text-accent tabular-nums">1.00×</span>
+                  </div>
+                  <input id="slider-fourier-speed" type="range" min="0.30" max="2.20" step="0.05" value="1.00" class="manifold-slider" />
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" data-lock-mode="3" class="lock-btn hairline-btn px-3 py-1.5">[ LOCK FIELD ]</button>
+                  <button id="btn-fourier-cycle" type="button" class="hairline-btn px-2.5 py-1.5">[ CYCLE PRESET ]</button>
+                  <button id="btn-fourier-reset" type="button" class="hairline-btn px-2.5 py-1.5">[ RESET ]</button>
+                </div>
+                <div class="flex items-center gap-4">
+                  <a id="plate-2-cf-link" href="https://codeforces.com/profile/Borachii" target="_blank" rel="noopener noreferrer" class="mono-action py-1 text-accent">Codeforces / Borachii ↗</a>
+                  <a id="plate-2-submissions-link" href="https://codeforces.com/submissions/Borachii" target="_blank" rel="noopener noreferrer" class="mono-action py-1 text-muted">Submissions ↗</a>
                 </div>
               </div>
             </div>
@@ -551,7 +592,7 @@
       </article>
 
       <!-- =====================================================================
-           PLATE III · GITHUB REPO 03 + 3D STRANGE ATTRACTORS & PHASE MANIFOLD
+           PLATE III · GITHUB REPO 03 + 3D STRANGE ATTRACTORS (MODE 5)
            ===================================================================== -->
       <article
         id="plate-3"
@@ -561,11 +602,36 @@
       >
         <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           <!-- Left Marginalia -->
-          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2.5 pt-2">
             <div class="text-accent">PLATE III</div>
             <div>FIELD: STRANGE ATTRACTOR</div>
             <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
-              3D RK4 chaotic phase-space manifold &amp; Lyapunov divergence.
+              3D RK4 chaotic phase-space manifold &amp; dual-trajectory Lyapunov divergence.
+            </div>
+            <div class="rule-t pt-2 space-y-1 tabular-nums text-[9.5px]">
+              <div class="flex justify-between gap-1">
+                <span>SYSTEM</span>
+                <span id="tel-attractor-name" class="text-ink truncate">LORENZ-63</span>
+              </div>
+              <div class="flex justify-between">
+                <span>SEP. δ(t)</span>
+                <span id="tel-attractor-delta" class="text-ink">0.001</span>
+              </div>
+              <div class="flex justify-between">
+                <span>LYAP. λ_eff</span>
+                <span id="tel-attractor-lyap" class="text-accent">0.000</span>
+              </div>
+            </div>
+            <div class="sparkline-frame">
+              <div class="flex justify-between text-[8.5px] tracking-[0.08em] text-muted mb-1">
+                <span>ln(δ / δ₀)</span>
+                <span class="text-accent">RK4</span>
+              </div>
+              <canvas id="spark-attractor" class="sparkline-canvas" width="160" height="44" aria-label="Lyapunov divergence sparkline"></canvas>
+            </div>
+            <div class="plate-mode-status pt-1 flex items-center gap-2 text-muted">
+              <span class="mode-dot inline-block w-1.5 h-1.5 bg-[var(--rule-strong)]"></span>
+              <span class="mode-state-label">STANDBY</span>
             </div>
           </div>
 
@@ -597,41 +663,52 @@
                 <p>
                   Implements responsive product-card shelves, promotional hero banners, category carousels, and clean CSS grid/flexbox alignment across desktop and mobile viewports.
                 </p>
-                <p class="text-muted text-[15px]">
-                  Published open-source under <span class="font-mono-spec text-[12px] text-ink">github.com/SachinMaurya24</span> with a live production deployment on Vercel.
-                </p>
               </div>
 
-              <!-- Big Demo CTA & GitHub Links -->
-              <div class="rule-t pt-5 space-y-3">
-                <a
-                  id="plate-3-demo-link"
-                  href="https://amazonclone-pi-neon.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hairline-btn is-active w-full flex items-center justify-between px-5 py-3.5 font-mono-spec text-[12px] tracking-[0.14em] uppercase"
-                >
-                  <span>LAUNCH LIVE DEMO</span>
-                  <span aria-hidden="true">↗</span>
-                </a>
-                <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase pt-1">
-                  <a
-                    id="plate-3-repo-link"
-                    href="https://github.com/SachinMaurya24/Amazon-clone"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="mono-action py-1 text-ink"
-                  >
-                    Amazon-clone Repository ↗
-                  </a>
-                  <a
-                    href="https://github.com/SachinMaurya24"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="mono-action py-1 text-muted"
-                  >
-                    github.com/SachinMaurya24 ↗
-                  </a>
+              <div class="formula-strip">
+                <div class="font-mono-spec text-[9px] tracking-[0.14em] uppercase text-muted">
+                  Eq. III.1 — Lorenz–63 Flow &amp; Effective Lyapunov Exponent
+                </div>
+                <div class="text-[14px]">
+                  $$\dot{x}=\sigma(y-x),\;\; \dot{y}=x(\rho-z)-y,\;\; \dot{z}=xy-\beta z, \quad \lambda_{\mathrm{eff}} = \frac{1}{t}\ln\frac{\|\delta(t)\|}{\delta_0}$$
+                </div>
+              </div>
+
+              <div class="rule-t rule-b py-4 space-y-4">
+                <div class="flex flex-wrap items-center gap-1.5 font-mono-spec text-[9.5px] tracking-[0.1em] uppercase">
+                  <button type="button" data-attractor-preset="0" class="mode-pill is-active">LORENZ-63</button>
+                  <button type="button" data-attractor-preset="1" class="mode-pill">AIZAWA</button>
+                  <button type="button" data-attractor-preset="2" class="mode-pill">THOMAS</button>
+                  <button type="button" data-attractor-preset="3" class="mode-pill">HALVORSEN</button>
+                </div>
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-attractor-rho" class="uppercase tracking-[0.1em] text-ink">
+                      ρ <span class="text-muted">(Lorenz Rayleigh Parameter)</span>
+                    </label>
+                    <span id="val-attractor-rho" class="text-accent tabular-nums">28.0</span>
+                  </div>
+                  <input id="slider-attractor-rho" type="range" min="14.0" max="38.0" step="0.5" value="28.0" class="manifold-slider" />
+                </div>
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-attractor-speed" class="uppercase tracking-[0.1em] text-ink">
+                      dt <span class="text-muted">(Integration Rate)</span>
+                    </label>
+                    <span id="val-attractor-speed" class="text-accent tabular-nums">1.00×</span>
+                  </div>
+                  <input id="slider-attractor-speed" type="range" min="0.30" max="2.20" step="0.05" value="1.00" class="manifold-slider" />
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" data-lock-mode="5" class="lock-btn hairline-btn px-3 py-1.5">[ LOCK FIELD ]</button>
+                  <button id="btn-attractor-reseed" type="button" class="hairline-btn px-2.5 py-1.5">[ RE-SEED δ₀ ]</button>
+                </div>
+                <div class="flex items-center gap-4">
+                  <a id="plate-3-demo-link" href="https://amazonclone-pi-neon.vercel.app" target="_blank" rel="noopener noreferrer" class="mono-action py-1 text-accent">Live Demo ↗</a>
+                  <a id="plate-3-repo-link" href="https://github.com/SachinMaurya24/Amazon-clone" target="_blank" rel="noopener noreferrer" class="mono-action py-1 text-muted">Amazon-clone ↗</a>
                 </div>
               </div>
             </div>
@@ -642,7 +719,7 @@
       </article>
 
       <!-- =====================================================================
-           PLATE IV · GITHUB REPO 04 + HELMHOLTZ CHLADNI NODAL EIGENMODES
+           PLATE IV · GITHUB REPO 04 + HELMHOLTZ CHLADNI EIGENMODES (MODE 6)
            ===================================================================== -->
       <article
         id="plate-4"
@@ -652,11 +729,36 @@
       >
         <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           <!-- Left Marginalia -->
-          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2 pt-2">
+          <div class="lg:col-span-2 font-mono-spec text-[10px] tracking-[0.12em] uppercase text-muted space-y-2.5 pt-2">
             <div class="text-accent">PLATE IV</div>
             <div>FIELD: HELMHOLTZ EIGENMODES</div>
             <div class="rule-t pt-2 normal-case font-serif-math italic text-[13px] tracking-normal">
               Spectral Chladni nodal contours &amp; resonant particle loci.
+            </div>
+            <div class="rule-t pt-2 space-y-1 tabular-nums text-[9.5px]">
+              <div class="flex justify-between">
+                <span>MODE (n, m)</span>
+                <span id="tel-eigen-pair" class="text-ink">(3, 5)</span>
+              </div>
+              <div class="flex justify-between">
+                <span>k² / π²</span>
+                <span id="tel-eigen-ksq" class="text-accent">34</span>
+              </div>
+              <div class="flex justify-between">
+                <span>NODAL LOCK</span>
+                <span id="tel-eigen-nodal" class="text-ink">0%</span>
+              </div>
+            </div>
+            <div class="sparkline-frame">
+              <div class="flex justify-between text-[8.5px] tracking-[0.08em] text-muted mb-1">
+                <span>LATTICE (n,m)</span>
+                <span class="text-accent">1..9</span>
+              </div>
+              <canvas id="spark-eigen" class="sparkline-canvas is-lattice" width="160" height="62" aria-label="Helmholtz eigenvalue lattice"></canvas>
+            </div>
+            <div class="plate-mode-status pt-1 flex items-center gap-2 text-muted">
+              <span class="mode-dot inline-block w-1.5 h-1.5 bg-[var(--rule-strong)]"></span>
+              <span class="mode-state-label">STANDBY</span>
             </div>
           </div>
 
@@ -688,41 +790,47 @@
                 <p>
                   Queries public AtCoder user data to aggregate contest performance, rating progression, and problem-solving breakdowns in a fast, distraction-free dashboard.
                 </p>
-                <p class="text-muted text-[15px]">
-                  Published open-source under <span class="font-mono-spec text-[12px] text-ink">github.com/SachinMaurya24</span> with an instant live web deployment.
-                </p>
               </div>
 
-              <!-- Big Demo CTA & GitHub Links -->
-              <div class="rule-t pt-5 space-y-3">
-                <a
-                  id="plate-4-demo-link"
-                  href="https://atcoder-profile-checker.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hairline-btn is-active w-full flex items-center justify-between px-5 py-3.5 font-mono-spec text-[12px] tracking-[0.14em] uppercase"
-                >
-                  <span>LAUNCH LIVE DEMO</span>
-                  <span aria-hidden="true">↗</span>
-                </a>
-                <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase pt-1">
-                  <a
-                    id="plate-4-repo-link"
-                    href="https://github.com/SachinMaurya24/Atcoder-profile-checker"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="mono-action py-1 text-ink"
-                  >
-                    Atcoder-profile-checker Repository ↗
-                  </a>
-                  <a
-                    href="https://github.com/SachinMaurya24"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="mono-action py-1 text-muted"
-                  >
-                    github.com/SachinMaurya24 ↗
-                  </a>
+              <div class="formula-strip">
+                <div class="font-mono-spec text-[9px] tracking-[0.14em] uppercase text-muted">
+                  Eq. IV.1 — 2D Helmholtz Equation &amp; Chladni Nodal Set
+                </div>
+                <div class="text-[14px]">
+                  $$\nabla^2 u + k^2 u = 0, \quad u_{n,m}(x,y) = c_1\cos(n\pi x)\cos(m\pi y) + c_2\cos(m\pi x)\cos(n\pi y)$$
+                </div>
+              </div>
+
+              <div class="rule-t rule-b py-4 space-y-4">
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-eigen-n" class="uppercase tracking-[0.1em] text-ink">
+                      n <span class="text-muted">(Primary Wave Number)</span>
+                    </label>
+                    <span id="val-eigen-n" class="text-accent tabular-nums">3</span>
+                  </div>
+                  <input id="slider-eigen-n" type="range" min="1" max="9" step="1" value="3" class="manifold-slider" />
+                </div>
+                <div class="space-y-1">
+                  <div class="flex items-center justify-between font-mono-spec text-[11px]">
+                    <label for="slider-eigen-m" class="uppercase tracking-[0.1em] text-ink">
+                      m <span class="text-muted">(Conjugate Wave Number)</span>
+                    </label>
+                    <span id="val-eigen-m" class="text-accent tabular-nums">5</span>
+                  </div>
+                  <input id="slider-eigen-m" type="range" min="1" max="9" step="1" value="5" class="manifold-slider" />
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-3 font-mono-spec text-[10px] tracking-[0.12em] uppercase">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" data-lock-mode="6" class="lock-btn hairline-btn px-3 py-1.5">[ LOCK FIELD ]</button>
+                  <button id="btn-eigen-impulse" type="button" class="hairline-btn px-2.5 py-1.5">[ IMPULSE ]</button>
+                  <button id="btn-eigen-cycle" type="button" class="hairline-btn px-2.5 py-1.5">[ CYCLE (n,m) ]</button>
+                </div>
+                <div class="flex items-center gap-4">
+                  <a id="plate-4-demo-link" href="https://atcoder-profile-checker.vercel.app" target="_blank" rel="noopener noreferrer" class="mono-action py-1 text-accent">Live Demo ↗</a>
+                  <a id="plate-4-repo-link" href="https://github.com/SachinMaurya24/Atcoder-profile-checker" target="_blank" rel="noopener noreferrer" class="mono-action py-1 text-muted">Atcoder-profile-checker ↗</a>
                 </div>
               </div>
             </div>
@@ -833,91 +941,126 @@
               Axioms &amp; Discipline
             </h2>
             <p class="mt-3 font-serif-math text-[16px] sm:text-[17px] leading-[1.6] text-muted">
-              A concise ledger of the computational foundations, mathematical tools, and engineering methods underlying every simulation and system.
+              A concise ledger of the computational foundations and mathematical methods underlying every simulation. Select any entry to inspect its governing relation or lock its live field.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Swiss 3-Column Hairline Ledger -->
+      <!-- Swiss 3-Column Interactive Hairline Ledger -->
       <div class="editorial-veil rule-t rule-b grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--rule)]">
         <div class="p-6 sm:p-8 space-y-5">
-          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
-            AXIOM I
-          </div>
-          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">
-            Numerical &amp; Systems Engineering
-          </h3>
-          <ul class="space-y-2.5 font-mono-spec text-[11px] leading-relaxed text-muted">
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">C++20 / Low-Level Systems</span>
-              <span>01</span>
+          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">AXIOM I</div>
+          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">Numerical &amp; Systems Engineering</h3>
+          <ul class="font-mono-spec text-[11px] leading-relaxed text-muted">
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>C++20 / Low-Level Systems</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>01</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\text{Latency} \approx \text{L1/L2 hit} + \text{branch predictability}$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Contiguous SoA memory layouts and zero-allocation inner loops keep force evaluation predictable under high body counts.</p>
+                <button type="button" data-jump-mode="4" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW LATENCY FLOW → ]</button>
+              </div>
             </li>
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Spatial Partitioning (Quad/Octree)</span>
-              <span>02</span>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Spatial Partitioning (Quad/Octree)</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>02</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$T(N) = \mathcal{O}(N \log N) \;\;\text{when}\;\; s/d &lt; \theta$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Far-field clusters collapse into monopole centers of mass, replacing quadratic pairwise summation with hierarchical traversal.</p>
+                <button type="button" data-jump-mode="1" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW N-BODY FIELD → ]</button>
+              </div>
             </li>
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Numerical Integration (RK4 / Verlet)</span>
-              <span>03</span>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Numerical Integration (RK4 / Verlet)</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>03</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$y_{n+1} = y_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4) + \mathcal{O}(h^5)$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Fourth-order Runge–Kutta preserves phase-space structure across chaotic attractors without artificial orbital drift.</p>
+                <button type="button" data-jump-mode="5" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW ATTRACTOR → ]</button>
+              </div>
             </li>
-            <li class="flex justify-between pb-1">
-              <span class="text-ink">Cache-Aware Performance Tuning</span>
-              <span>04</span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="p-6 sm:p-8 space-y-5">
-          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
-            AXIOM II
-          </div>
-          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">
-            Mathematical Foundations
-          </h3>
-          <ul class="space-y-2.5 font-mono-spec text-[11px] leading-relaxed text-muted">
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Probability &amp; Measure Intuition</span>
-              <span>01</span>
-            </li>
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Stochastic Processes &amp; SDEs</span>
-              <span>02</span>
-            </li>
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Combinatorics &amp; Counting</span>
-              <span>03</span>
-            </li>
-            <li class="flex justify-between pb-1">
-              <span class="text-ink">Graph Theory &amp; Shortest Paths</span>
-              <span>04</span>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Cache-Aware Performance Tuning</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>04</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\text{Bandwidth} = \frac{\text{Bytes Transferred}}{\Delta t_{\text{frame}}}$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Typed flat buffers (Float32Array) and reused scratch grids eliminate GC pauses in 60fps Marching Squares solvers.</p>
+                <button type="button" data-jump-mode="6" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW EIGENMODES → ]</button>
+              </div>
             </li>
           </ul>
         </div>
 
         <div class="p-6 sm:p-8 space-y-5">
-          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">
-            AXIOM III
-          </div>
-          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">
-            Research &amp; Architecture
-          </h3>
-          <ul class="space-y-2.5 font-mono-spec text-[11px] leading-relaxed text-muted">
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Experimental Benchmarking</span>
-              <span>01</span>
+          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">AXIOM II</div>
+          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">Mathematical Foundations</h3>
+          <ul class="font-mono-spec text-[11px] leading-relaxed text-muted">
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Probability &amp; Measure Intuition</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>01</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\mathbb{E}[X] = \int_{\Omega} X(\omega)\, d\mathbb{P}(\omega)$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Ensemble averages and empirical variance reveal convergence toward stationary distributions across live particle paths.</p>
+                <button type="button" data-jump-mode="2" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW STOCHASTIC SDE → ]</button>
+              </div>
             </li>
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Contest Problem Authoring</span>
-              <span>02</span>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Stochastic Processes &amp; SDEs</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>02</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$dX_t = \kappa(\mu - X_t)\,dt + \sigma\, dW_t$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Mean-reverting Ornstein–Uhlenbeck paths balance deterministic restoring drift against Brownian volatility impulses.</p>
+                <button type="button" data-jump-mode="2" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW STOCHASTIC SDE → ]</button>
+              </div>
             </li>
-            <li class="flex justify-between rule-b pb-2">
-              <span class="text-ink">Deterministic State Systems</span>
-              <span>03</span>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Harmonic &amp; Spectral Analysis</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>03</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\langle u_{n,m}, u_{p,q} \rangle = 0 \;\;\text{for}\;\; (n,m)\neq(p,q)$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Orthogonal Fourier harmonics and Helmholtz eigenfunctions decompose curves and vibrating membranes into discrete spectra.</p>
+                <button type="button" data-jump-mode="3" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW HARMONICS → ]</button>
+              </div>
             </li>
-            <li class="flex justify-between pb-1">
-              <span class="text-ink">TypeScript &amp; Precision Web UI</span>
-              <span>04</span>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Differential Geometry &amp; Fields</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>04</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\dot{\mathbf{x}} = -\nabla f(\mathbf{x}), \quad \nabla f \perp \{f = c\}$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Steepest-descent streamlines intersect level-set iso-contours orthogonally across every non-critical point of the manifold.</p>
+                <button type="button" data-jump-mode="0" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW SCALAR FIELD → ]</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-5">
+          <div class="font-mono-spec text-[10px] tracking-[0.14em] uppercase text-accent">AXIOM III</div>
+          <h3 class="font-serif-math text-xl sm:text-2xl font-normal text-ink">Research &amp; Architecture</h3>
+          <ul class="font-mono-spec text-[11px] leading-relaxed text-muted">
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Experimental Benchmarking</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>01</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\epsilon(\theta) = \frac{\|\mathbf{a}_{\text{BH}} - \mathbf{a}_{\text{exact}}\|}{\|\mathbf{a}_{\text{exact}}\|}$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Accuracy-versus-throughput tradeoffs are measured directly via tunable opening angles and live node-count telemetry.</p>
+                <button type="button" data-jump-mode="1" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW N-BODY FIELD → ]</button>
+              </div>
+            </li>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Contest Problem Authoring</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>02</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\forall\, x \in \mathcal{I}_{\text{valid}},\;\; \mathcal{V}(x) = \top$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Formal input validators, adversarial stress generators, and tight complexity proofs guarantee unambiguous problem statements.</p>
+              </div>
+            </li>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>Deterministic State Systems</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>03</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$S_{t+1} = \delta(S_t,\, a_t)$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Explicit transition functions keep interactive games, failover routing graphs, and UI state reproducible without side-effect drift.</p>
+                <button type="button" data-jump-mode="4" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW LATENCY FLOW → ]</button>
+              </div>
+            </li>
+            <li class="axiom-item">
+              <button type="button" class="axiom-trigger" aria-expanded="false"><span>TypeScript &amp; Precision Web UI</span><span class="text-muted"><span class="axiom-marker text-accent mr-1.5">+</span>04</span></button>
+              <div class="axiom-drawer space-y-2">
+                <div class="text-[12px] text-ink">$\text{Grid} \subset \mathbb{Z}_{12}, \quad r_{\text{corner}} = 0\text{px}$</div>
+                <p class="font-serif-math text-[13.5px] leading-snug text-muted">Swiss typographic hierarchy, hairline rules, and real-time Canvas geometry replace ornamental UI chrome with functional clarity.</p>
+                <button type="button" data-jump-mode="0" class="hairline-btn px-2 py-1 text-[9px] uppercase tracking-[0.1em]">[ VIEW SCALAR FIELD → ]</button>
+              </div>
             </li>
           </ul>
         </div>
@@ -946,10 +1089,10 @@
             Delhi, India · B.Tech CSE (MAIT)
           </div>
           <p class="font-serif-math italic text-[15px] leading-relaxed text-muted max-w-md pt-1">
-            Set in STIX Two Text &amp; IBM Plex Mono. All five mathematical fields—scalar iso-contours, Barnes–Hut quadtrees, Ornstein–Uhlenbeck trajectories, Dijkstra geodesic trees, and laminar latency queues—are computed live in real time without pre-rendered media.
+            Set in STIX Two Text &amp; IBM Plex Mono. All seven mathematical fields—scalar iso-contours, Barnes–Hut quadtrees, Ornstein–Uhlenbeck SDEs, Fourier harmonic epicycles, laminar latency queues, 3D strange attractors, and Helmholtz Chladni eigenmodes—are computed live in real time without pre-rendered media.
           </p>
           <div class="rule-t pt-3 font-mono-spec text-[10px] tracking-[0.08em] text-muted">
-            KEYS: <span class="text-ink">0–4</span> Lock Field · <span class="text-ink">Space</span> Pause · <span class="text-ink">I</span> Inspect · <span class="text-ink">T</span> Theme · <span class="text-ink">R</span> Reset
+            KEYS: <span class="text-ink">0–6</span> Lock Field · <span class="text-ink">Space</span> Pause · <span class="text-ink">I</span> Inspect · <span class="text-ink">T</span> Theme · <span class="text-ink">R</span> Reset
           </div>
         </div>
 
@@ -1006,6 +1149,7 @@
   <script defer src="js/fields/flow-field.js"></script>
   <script defer src="js/fields/attractor-field.js"></script>
   <script defer src="js/fields/eigenmode-field.js"></script>
+  <script defer src="js/drafting-chrome.js"></script>
   <script defer src="js/github.js"></script>
   <script defer src="js/ui.js"></script>
   <script defer src="js/main.js"></script>

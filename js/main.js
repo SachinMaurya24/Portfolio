@@ -64,6 +64,11 @@
     if (state.weights[5] > 0.005 && Manifold.fields.attractor) Manifold.fields.attractor.render(ctx, state.weights[5]);
     if (state.weights[6] > 0.005 && Manifold.fields.eigenmode) Manifold.fields.eigenmode.render(ctx, state.weights[6]);
 
+    // Precision drafting-plate chrome: archival grain, coordinate rulers & reticle
+    if (Manifold.chrome) {
+      Manifold.chrome.render(ctx);
+    }
+
     if (state.frame % 6 === 0) {
       Manifold.ui.updateTelemetryReadouts();
     }
@@ -76,6 +81,10 @@
       pointer.active = true;
       pointer.targetX = e.clientX;
       pointer.targetY = e.clientY;
+      const t = e.target;
+      pointer.overEditorial = Boolean(
+        t && t.closest && t.closest('.editorial-veil, .masthead, .field-dock')
+      );
     }, { passive: true });
 
     window.addEventListener('touchstart', (e) => {

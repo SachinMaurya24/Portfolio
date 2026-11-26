@@ -9,7 +9,9 @@
   const Manifold = global.Manifold;
 
   const GITHUB_USER = 'SachinMaurya24';
+  const CODEFORCES_HANDLE = 'Borachii';
   const CACHE_KEY = `manifold-gh-${GITHUB_USER}-v3`;
+  const CF_CACHE_KEY = `manifold-cf-${CODEFORCES_HANDLE}-v1`;
   const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
   const ghState = {
@@ -114,6 +116,7 @@
 
     for (let idx = 0; idx < 4; idx++) {
       const plateNum = idx + 1;
+      if (plateNum === 2) continue; // Plate II is dedicated to Competitive Programming (Codeforces)
       const repo = candidates[idx];
 
       const kickerEl = document.getElementById(`plate-${plateNum}-kicker`);
@@ -314,6 +317,7 @@
     if (statusEl) statusEl.textContent = 'OFFLINE / RATE LIMITED';
 
     for (let plateNum = 1; plateNum <= 4; plateNum++) {
+      if (plateNum === 2) continue;
       const kickerEl = document.getElementById(`plate-${plateNum}-kicker`);
       if (kickerEl) kickerEl.textContent = `PLATE 0${plateNum} · MATHEMATICAL STUDY`;
     }
@@ -383,11 +387,73 @@
     }
   }
 
+  async function loadCodeforcesProfile() {
+    const kickerEl = document.getElementById('plate-2-kicker');
+    const metaEl = document.getElementById('plate-2-meta');
+    if (!kickerEl && !metaEl) return;
+
+    try {
+      let user = null;
+      try {
+        const raw = sessionStorage.getItem(CF_CACHE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Date.now() - parsed.ts <= CACHE_TTL_MS && parsed.user) {
+            user = parsed.user;
+          }
+        }
+      } catch (_) {
+        // Ignore storage read errors
+      }
+
+      if (!user) {
+        const res = await fetch(`https://codeforces.com/api/user.info?handles=${encodeURIComponent(CODEFORCES_HANDLE)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.status !== 'OK' || !Array.isArray(data.result) || !data.result[0]) return;
+        user = data.result[0];
+        try {
+          sessionStorage.setItem(CF_CACHE_KEY, JSON.stringify({ ts: Date.now(), user }));
+        } catch (_) {
+          // Ignore storage quota errors
+        }
+      }
+
+      const handle = user.handle || CODEFORCES_HANDLE;
+      const rank = user.rank ? String(user.rank).toUpperCase() : 'COMPETITIVE PROGRAMMING';
+      const rating = typeof user.rating === 'number' ? user.rating : null;
+      const maxRating = typeof user.maxRating === 'number' ? user.maxRating : null;
+      const maxRank = user.maxRank ? String(user.maxRank) : null;
+
+      if (kickerEl) {
+        kickerEl.textContent = rating !== null
+          ? `CODEFORCES · ${handle.toUpperCase()} · ${rank} · ${rating}`
+          : `CODEFORCES · ${handle.toUpperCase()} · ${rank}`;
+      }
+
+      if (metaEl) {
+        const parts = [handle, 'Codeforces'];
+        if (rating !== null) {
+          const maxStr = maxRating !== null ? ` (Max ${maxRating}${maxRank ? ' · ' + maxRank : ''})` : '';
+          parts.push(`Rating ${rating}${maxStr}`);
+        }
+        parts.push('C++20');
+        metaEl.textContent = parts.join(' · ');
+      }
+    } catch (_) {
+      // Keep static fallback text in Plate II if Codeforces API is unreachable
+    }
+  }
+
   Manifold.github = {
     init: () => {
       bindControls();
       load(false);
+      loadCodeforcesProfile();
     },
-    refresh: () => load(true)
+    refresh: () => {
+      load(true);
+      loadCodeforcesProfile();
+    }
   };
 })(window);

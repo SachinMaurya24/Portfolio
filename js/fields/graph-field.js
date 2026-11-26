@@ -1,7 +1,7 @@
 /* =========================================================================
    MODE 3: FUNDAMENTAL MATHEMATICAL FIELD — FOURIER EPICYCLES & LISSAJOUS
    Classical harmonic analysis, polar graticule, osculating tangent/normal
-   vectors, and phase-locked epicyclic loci.
+   vectors, and phase-locked epicyclic loci with configurable harmonic depth.
    ========================================================================= */
 (function (global) {
   'use strict';
@@ -12,38 +12,46 @@
   const PRESETS = [
     {
       name: 'LISSAJOUS 3:2',
-      label: 'γ(t) = R₁e^(i3t) + R₂e^(-i2t)',
+      label: 'γ(t) = Σ rₖ e^(i ωₖ t)',
       terms: [
-        { amp: 0.56, freq: 1, phase: 0 },
-        { amp: 0.28, freq: -2, phase: Math.PI / 4 },
-        { amp: 0.14, freq: 3, phase: Math.PI / 2 }
+        { amp: 0.54, freq: 1, phase: 0 },
+        { amp: 0.27, freq: -2, phase: Math.PI / 4 },
+        { amp: 0.14, freq: 3, phase: Math.PI / 2 },
+        { amp: 0.08, freq: -5, phase: Math.PI / 6 },
+        { amp: 0.05, freq: 7, phase: Math.PI / 3 }
       ]
     },
     {
       name: 'GOLDEN RATIO φ',
       label: 'γ(t) = Σ rₖ e^(i φᵏ t)',
       terms: [
-        { amp: 0.54, freq: 1, phase: 0 },
-        { amp: 0.31, freq: 1.6180339, phase: 0.4 },
-        { amp: 0.15, freq: -2.6180339, phase: 1.1 }
+        { amp: 0.52, freq: 1, phase: 0 },
+        { amp: 0.30, freq: 1.6180339, phase: 0.4 },
+        { amp: 0.15, freq: -2.6180339, phase: 1.1 },
+        { amp: 0.08, freq: 4.2360679, phase: 0.2 },
+        { amp: 0.05, freq: -6.8541019, phase: 1.8 }
       ]
     },
     {
       name: 'HARMONIC ROSE 5:4',
       label: 'r(θ) = a cos(5θ/4) · EPICYCLIC',
       terms: [
-        { amp: 0.50, freq: 1, phase: 0 },
-        { amp: 0.34, freq: -4, phase: 0 },
-        { amp: 0.16, freq: 5, phase: Math.PI / 3 }
+        { amp: 0.48, freq: 1, phase: 0 },
+        { amp: 0.32, freq: -4, phase: 0 },
+        { amp: 0.16, freq: 5, phase: Math.PI / 3 },
+        { amp: 0.09, freq: -8, phase: Math.PI / 2 },
+        { amp: 0.05, freq: 9, phase: 0 }
       ]
     },
     {
       name: 'CARDIOID / DELTOID',
       label: 'z(t) = 2e^(it) − e^(i2t) + ½e^(-i3t)',
       terms: [
-        { amp: 0.52, freq: 1, phase: 0 },
-        { amp: 0.30, freq: 2, phase: Math.PI },
-        { amp: 0.14, freq: -3, phase: 0 }
+        { amp: 0.50, freq: 1, phase: 0 },
+        { amp: 0.29, freq: 2, phase: Math.PI },
+        { amp: 0.14, freq: -3, phase: 0 },
+        { amp: 0.08, freq: 4, phase: Math.PI / 2 },
+        { amp: 0.05, freq: -6, phase: Math.PI / 4 }
       ]
     }
   ];
@@ -53,18 +61,32 @@
   const MAX_TRAIL = 340;
   let theta = 0;
 
+  function syncTelemetryName() {
+    state.telemetry.fourierPresetName = PRESETS[presetIndex].name;
+  }
+
   function init(silent) {
     trail = [];
     theta = 0;
+    state.telemetry.fourierRadiusHistory = [];
+    syncTelemetryName();
     if (!silent) {
       Manifold.notify(`HARMONIC MODE · ${PRESETS[presetIndex].name}`);
     }
   }
 
-  function handleClick() {
-    presetIndex = (presetIndex + 1) % PRESETS.length;
+  function setPreset(idx, silent) {
+    presetIndex = ((idx % PRESETS.length) + PRESETS.length) % PRESETS.length;
     trail = [];
-    Manifold.notify(`HARMONIC PRESET · ${PRESETS[presetIndex].name}`);
+    state.telemetry.fourierRadiusHistory = [];
+    syncTelemetryName();
+    if (!silent) {
+      Manifold.notify(`HARMONIC PRESET · ${PRESETS[presetIndex].name}`);
+    }
+  }
+
+  function handleClick() {
+    setPreset(presetIndex + 1, false);
   }
 
   function render(ctx, alpha) {
@@ -76,6 +98,8 @@
 
     const baseR = Math.min(w * (w >= 1024 ? 0.24 : 0.38), h * 0.34);
     const preset = PRESETS[presetIndex];
+    const harmonicCount = Math.max(1, Math.min(preset.terms.length, state.params.fourierHarmonics || 3));
+    const speed = state.params.fourierSpeed || 1.0;
 
     // Pointer gently modulates phase offset & secondary harmonic tilt
     const normX = Math.max(-1, Math.min(1, (pointer.x - cx) / Math.max(1, w * 0.4)));
@@ -84,7 +108,7 @@
     const ampMod = 1 + normY * 0.12;
 
     if (!state.paused) {
-      theta += 0.016;
+      theta += 0.016 * speed;
     }
 
     // 1. Subtle Polar Coordinate Graticule
@@ -120,18 +144,18 @@
       ctx.stroke();
     }
 
-    // 2. Compute Fourier Epicycle Chain
+    // 2. Compute Fourier Epicycle Chain (N active harmonics)
     let px = cx;
     let py = cy;
     const joints = [{ x: px, y: py }];
 
-    for (let i = 0; i < preset.terms.length; i++) {
+    for (let i = 0; i < harmonicCount; i++) {
       const term = preset.terms[i];
       const r = baseR * term.amp * (i === 1 ? ampMod : 1);
       const ang = theta * term.freq + term.phase + (i > 0 ? phaseShift : 0);
 
       // Epicycle circle
-      ctx.strokeStyle = rgba(ink, alpha * (0.14 - i * 0.025));
+      ctx.strokeStyle = rgba(ink, alpha * Math.max(0.05, 0.15 - i * 0.022));
       ctx.lineWidth = 0.85;
       ctx.beginPath();
       ctx.arc(px, py, r, 0, Math.PI * 2);
@@ -141,7 +165,7 @@
       const ny = py + Math.sin(ang) * r;
 
       // Radius vector
-      ctx.strokeStyle = rgba(accent, alpha * (0.42 - i * 0.07));
+      ctx.strokeStyle = rgba(accent, alpha * Math.max(0.16, 0.44 - i * 0.06));
       ctx.lineWidth = 1.0;
       ctx.beginPath();
       ctx.moveTo(px, py);
@@ -153,10 +177,19 @@
       joints.push({ x: px, y: py });
     }
 
-    // Record continuous locus trail
+    // Record continuous locus trail & telemetry
+    const normRadius = Math.hypot(px - cx, py - cy) / Math.max(1, baseR);
+    const wrappedTheta = ((theta % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+    state.telemetry.fourierTheta = wrappedTheta;
+    state.telemetry.fourierRadius = normRadius;
+    state.telemetry.fourierPresetName = preset.name;
+
     if (!state.paused) {
       trail.push({ x: px, y: py });
       if (trail.length > MAX_TRAIL) trail.shift();
+      if (state.frame % 4 === 0) {
+        Manifold.pushHistory(state.telemetry.fourierRadiusHistory, normRadius, 48);
+      }
     }
 
     // 3. Draw Harmonic Locus Curve with Progressive Fade
@@ -213,9 +246,8 @@
     // 6. Subtle Monospace Mathematical Annotation
     ctx.font = '10px "IBM Plex Mono", ui-monospace, monospace';
     ctx.fillStyle = rgba(ink, alpha * 0.45);
-    const wrappedTheta = ((theta % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
     ctx.fillText(
-      `${preset.label}   θ = ${wrappedTheta.toFixed(2)} rad`,
+      `${preset.label}   N = ${harmonicCount}   θ = ${wrappedTheta.toFixed(2)} rad`,
       cx - baseR,
       cy + baseR + 28
     );
@@ -226,6 +258,9 @@
   Manifold.fields.graph = {
     init,
     reset: () => init(false),
+    setPreset,
+    cyclePreset: () => setPreset(presetIndex + 1, false),
+    clearTrail: () => { trail = []; },
     handleClick,
     render
   };

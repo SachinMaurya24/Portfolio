@@ -198,6 +198,9 @@
     }
     state.telemetry.nbodyQuadNodes = lastQuadNodeCount;
     state.telemetry.nbodyCount = bodies.length;
+    if (state.frame % 10 === 0) {
+      Manifold.pushHistory(state.telemetry.nbodyNodesHistory, lastQuadNodeCount, 48);
+    }
 
     if (!state.paused) {
       const dt = 0.34 * state.params.nbodyDt;

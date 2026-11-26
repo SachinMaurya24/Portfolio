@@ -6,6 +6,7 @@
    - Move pointer to orbit 3D phase-space camera (yaw / pitch)
    - Click canvas to cycle Strange Attractor (Lorenz, Aizawa, Thomas, Halvorsen)
    - Shift+Click to re-seed an epsilon-perturbed twin pair (delta_0 = 1e-3)
+   - Live Rayleigh parameter ρ & integration speed controls
    ========================================================================= */
 (function (global) {
   'use strict';
@@ -22,9 +23,9 @@
       scale: 6.2,
       center: [0, 0, 25],
       init: [1.1, 1.2, 20.0],
-      deriv(x, y, z) {
+      deriv(x, y, z, rhoParam) {
         const sigma = 10;
-        const rho = 28;
+        const rho = rhoParam || 28;
         const beta = 8 / 3;
         return [
           sigma * (y - x),
@@ -98,11 +99,11 @@
   let yaw = 0.6;
   let pitch = 0.35;
 
-  function rk4Step(p, dt, deriv) {
-    const k1 = deriv(p.x, p.y, p.z);
-    const k2 = deriv(p.x + 0.5 * dt * k1[0], p.y + 0.5 * dt * k1[1], p.z + 0.5 * dt * k1[2]);
-    const k3 = deriv(p.x + 0.5 * dt * k2[0], p.y + 0.5 * dt * k2[1], p.z + 0.5 * dt * k2[2]);
-    const k4 = deriv(p.x + dt * k3[0], p.y + dt * k3[1], p.z + dt * k3[2]);
+  function rk4Step(p, dt, deriv, rhoParam) {
+    const k1 = deriv(p.x, p.y, p.z, rhoParam);
+    const k2 = deriv(p.x + 0.5 * dt * k1[0], p.y + 0.5 * dt * k1[1], p.z + 0.5 * dt * k1[2], rhoParam);
+    const k3 = deriv(p.x + 0.5 * dt * k2[0], p.y + 0.5 * dt * k2[1], p.z + 0.5 * dt * k2[2], rhoParam);
+    const k4 = deriv(p.x + dt * k3[0], p.y + dt * k3[1], p.z + dt * k3[2], rhoParam);
 
     p.x += (dt / 6) * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
     p.y += (dt / 6) * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
@@ -111,6 +112,7 @@
 
   function seedPair(silent) {
     const att = ATTRACTORS[presetIndex];
+    const rhoParam = state.params.attractorRho || 28.0;
     const jitter = silent ? 0 : (Math.random() - 0.5) * 0.25;
     primary = {
       x: att.init[0] + jitter,
@@ -125,16 +127,30 @@
     primaryTrail = [];
     shadowTrail = [];
     integratedTime = 0;
+    state.telemetry.attractorLyapHistory = [];
+    state.telemetry.attractorName = att.name;
+    state.params.attractorPreset = presetIndex;
 
     // Warm-up 180 steps so the manifold is immediately rich on first view
     for (let i = 0; i < 180; i++) {
-      rk4Step(primary, att.dt, att.deriv);
-      rk4Step(shadow, att.dt, att.deriv);
+      rk4Step(primary, att.dt, att.deriv, rhoParam);
+      rk4Step(shadow, att.dt, att.deriv, rhoParam);
       integratedTime += att.dt;
       if (i % 2 === 0) {
         primaryTrail.push({ x: primary.x, y: primary.y, z: primary.z });
         shadowTrail.push({ x: shadow.x, y: shadow.y, z: shadow.z });
       }
+    }
+  }
+
+  function setPreset(idx, silent) {
+    presetIndex = ((idx % ATTRACTORS.length) + ATTRACTORS.length) % ATTRACTORS.length;
+    seedPair(true);
+    if (!silent) {
+      Manifold.notify(`ATTRACTOR · ${ATTRACTORS[presetIndex].name}`);
+    }
+    if (Manifold.ui && Manifold.ui.syncAttractorPills) {
+      Manifold.ui.syncAttractorPills(presetIndex);
     }
   }
 
@@ -148,11 +164,9 @@
   function handleClick(_x, _y, shiftKey) {
     if (shiftKey) {
       seedPair(false);
-      Manifold.notify(`PERTURBED PAIR RE-SEEDED · δ₀ = 10⁻³`);
+      Manifold.notify('PERTURBED PAIR RE-SEEDED · δ₀ = 10⁻³');
     } else {
-      presetIndex = (presetIndex + 1) % ATTRACTORS.length;
-      seedPair(true);
-      Manifold.notify(`ATTRACTOR · ${ATTRACTORS[presetIndex].name}`);
+      setPreset(presetIndex + 1, false);
     }
   }
 
@@ -161,12 +175,10 @@
     const vy = (pt.y - att.center[1]) * att.scale * baseScale;
     const vz = (pt.z - att.center[2]) * att.scale * baseScale;
 
-    // Yaw around Z/Y axis
     const x1 = vx * cosY - vy * sinY;
     const y1 = vx * sinY + vy * cosY;
     const z1 = vz;
 
-    // Pitch tilt
     const y2 = y1 * cosP - z1 * sinP;
     const z2 = y1 * sinP + z1 * cosP;
 
@@ -190,19 +202,27 @@
     const { cx, cy } = getFocalCenter();
     const att = ATTRACTORS[presetIndex];
     const baseScale = Math.min(w, h) / 760;
+    const rhoParam = state.params.attractorRho || 28.0;
+    const speedScale = state.params.attractorSpeed || 1.0;
 
     // Advance RK4 integration
     if (!state.paused) {
+      const effDt = att.dt * speedScale;
       for (let s = 0; s < att.stepsPerFrame; s++) {
-        rk4Step(primary, att.dt, att.deriv);
-        rk4Step(shadow, att.dt, att.deriv);
-        integratedTime += att.dt;
+        rk4Step(primary, effDt, att.deriv, rhoParam);
+        rk4Step(shadow, effDt, att.deriv, rhoParam);
+        integratedTime += effDt;
+        // Guard against divergence if user pushes rho extreme
+        if (!Number.isFinite(primary.x) || Math.abs(primary.x) > 500) {
+          seedPair(true);
+          break;
+        }
         primaryTrail.push({ x: primary.x, y: primary.y, z: primary.z });
         shadowTrail.push({ x: shadow.x, y: shadow.y, z: shadow.z });
         if (primaryTrail.length > MAX_TRAIL) primaryTrail.shift();
         if (shadowTrail.length > MAX_TRAIL) shadowTrail.shift();
       }
-      yaw += 0.0032;
+      yaw += 0.0032 * speedScale;
     }
 
     // Pointer-driven camera orbit offset
@@ -287,7 +307,6 @@
     // 4. Trajectory Heads, Velocity Tangent & Lyapunov Divergence Chord
     const shadowHead = project3D(shadow, att, cx, cy, baseScale, cosY, sinY, cosP, sinP);
     if (headProj) {
-      // Divergence chord between γ₁(t) and γ₂(t)
       ctx.strokeStyle = rgba(accent, alpha * 0.48);
       ctx.lineWidth = 0.85;
       ctx.setLineDash([2, 3]);
@@ -297,8 +316,7 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Velocity tangent vector v = dx/dt at primary head
-      const vel = att.deriv(primary.x, primary.y, primary.z);
+      const vel = att.deriv(primary.x, primary.y, primary.z, rhoParam);
       const vLen = Math.hypot(vel[0], vel[1], vel[2]) || 1;
       const stepScale = 2.6 / att.scale;
       const tipPt = {
@@ -315,7 +333,6 @@
       ctx.lineTo(tipProj.sx, tipProj.sy);
       ctx.stroke();
 
-      // Primary & shadow head markers
       ctx.fillStyle = rgba(ink, alpha * 0.95);
       ctx.beginPath();
       ctx.arc(headProj.sx, headProj.sy, 3.0, 0, Math.PI * 2);
@@ -327,15 +344,22 @@
       ctx.fill();
     }
 
-    // 5. Monospace Phase-Space Telemetry Annotation
+    // 5. Monospace Phase-Space Telemetry Annotation & Shared Telemetry State
     const delta = Math.hypot(
       primary.x - shadow.x,
       primary.y - shadow.y,
       primary.z - shadow.z
     );
-    const lyap = integratedTime > 0.1
-      ? Math.log(Math.max(1e-9, delta / EPSILON_0)) / integratedTime
-      : 0;
+    const logSep = Math.log(Math.max(1e-4, delta / EPSILON_0));
+    const lyap = integratedTime > 0.1 ? logSep / integratedTime : 0;
+
+    state.telemetry.attractorName = att.name;
+    state.telemetry.attractorDelta = delta;
+    state.telemetry.attractorLyap = lyap;
+    state.telemetry.attractorTime = integratedTime;
+    if (!state.paused && state.frame % 8 === 0) {
+      Manifold.pushHistory(state.telemetry.attractorLyapHistory, logSep, 48);
+    }
 
     ctx.font = '10px "IBM Plex Mono", ui-monospace, monospace';
     ctx.fillStyle = rgba(ink, alpha * 0.48);
@@ -359,6 +383,11 @@
   Manifold.fields.attractor = {
     init,
     reset: () => init(false),
+    reseed: () => {
+      seedPair(false);
+      Manifold.notify('PERTURBED PAIR RE-SEEDED · δ₀ = 10⁻³');
+    },
+    setPreset,
     handleClick,
     render
   };

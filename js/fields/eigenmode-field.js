@@ -6,6 +6,7 @@
    - Move pointer to detune modal phase & inject local acoustic perturbation
    - Click canvas to cycle harmonic eigenvalue pairs (n, m)
    - Shift+Click to scatter resonant particles with an acoustic impulse
+   - Live (n, m) integer sliders synced with Plate IV controls
    ========================================================================= */
 (function (global) {
   'use strict';
@@ -38,23 +39,39 @@
     }
   }
 
+  function applyPreset(idx, silent) {
+    presetIndex = ((idx % EIGEN_PRESETS.length) + EIGEN_PRESETS.length) % EIGEN_PRESETS.length;
+    const p = EIGEN_PRESETS[presetIndex];
+    state.params.eigenN = p.n;
+    state.params.eigenM = p.m;
+    if (Manifold.ui && Manifold.ui.syncEigenSliders) {
+      Manifold.ui.syncEigenSliders(p.n, p.m);
+    }
+    if (!silent) {
+      Manifold.notify(`HELMHOLTZ EIGENMODE · MODE (${p.n}, ${p.m})`);
+    }
+  }
+
+  function scatter() {
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].vx += (Math.random() - 0.5) * 0.08;
+      particles[i].vy += (Math.random() - 0.5) * 0.08;
+    }
+    Manifold.notify('ACOUSTIC IMPULSE · PARTICLES SCATTERED');
+  }
+
   function init(silent) {
     seedParticles();
     if (!silent) {
-      Manifold.notify(`EIGENMODE RESET · ${EIGEN_PRESETS[presetIndex].name}`);
+      Manifold.notify(`EIGENMODE RESET · MODE (${state.params.eigenN}, ${state.params.eigenM})`);
     }
   }
 
   function handleClick(_x, _y, shiftKey) {
     if (shiftKey) {
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].vx += (Math.random() - 0.5) * 0.08;
-        particles[i].vy += (Math.random() - 0.5) * 0.08;
-      }
-      Manifold.notify('ACOUSTIC IMPULSE · PARTICLES SCATTERED');
+      scatter();
     } else {
-      presetIndex = (presetIndex + 1) % EIGEN_PRESETS.length;
-      Manifold.notify(`HELMHOLTZ EIGENMODE · ${EIGEN_PRESETS[presetIndex].name}`);
+      applyPreset(presetIndex + 1, false);
     }
   }
 
@@ -64,7 +81,6 @@
       c1 * Math.cos(n * pi * u) * Math.cos(m * pi * v) +
       c2 * Math.cos(m * pi * u) * Math.cos(n * pi * v);
 
-    // Subtle localized pointer acoustic perturbation
     const du = u - ptrU;
     const dv = v - ptrV;
     const dist2 = du * du + dv * dv;
@@ -143,8 +159,10 @@
     const top = cy - half;
     const cellSize = plateSize / GRID_N;
 
-    const preset = EIGEN_PRESETS[presetIndex];
-    const t = state.time * preset.omega;
+    const n = state.params.eigenN || 3;
+    const m = state.params.eigenM || 5;
+    const omega = EIGEN_PRESETS[presetIndex].omega;
+    const t = state.time * omega;
 
     // Pointer modulates superposition phase angle
     const ptrU = Math.max(-1.2, Math.min(1.2, (pointer.x - cx) / Math.max(1, half)));
@@ -158,7 +176,7 @@
       const rowOff = j * (GRID_N + 1);
       for (let i = 0; i <= GRID_N; i++) {
         const u = (i / GRID_N) * 2 - 1;
-        fieldGrid[rowOff + i] = evalChladni(u, v, preset.n, preset.m, c1, c2, ptrU, ptrV);
+        fieldGrid[rowOff + i] = evalChladni(u, v, n, m, c1, c2, ptrU, ptrV);
       }
     }
 
@@ -193,15 +211,15 @@
 
     // 5. Resonant Nodal Particles Migrating Along -∇|u|²
     const eps = 0.018;
+    let nearNodeCount = 0;
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
-      const val = evalChladni(p.u, p.v, preset.n, preset.m, c1, c2, ptrU, ptrV);
+      const val = evalChladni(p.u, p.v, n, m, c1, c2, ptrU, ptrV);
 
       if (!state.paused) {
-        const gx = (evalChladni(p.u + eps, p.v, preset.n, preset.m, c1, c2, ptrU, ptrV) - val) / eps;
-        const gy = (evalChladni(p.u, p.v + eps, preset.n, preset.m, c1, c2, ptrU, ptrV) - val) / eps;
+        const gx = (evalChladni(p.u + eps, p.v, n, m, c1, c2, ptrU, ptrV) - val) / eps;
+        const gy = (evalChladni(p.u, p.v + eps, n, m, c1, c2, ptrU, ptrV) - val) / eps;
 
-        // Drift toward u = 0 + acoustic agitation proportional to |u|
         const agitate = Math.abs(val) * 0.012;
         p.vx = p.vx * 0.80 - val * gx * 0.0022 + (Math.random() - 0.5) * agitate;
         p.vy = p.vy * 0.80 - val * gy * 0.0022 + (Math.random() - 0.5) * agitate;
@@ -216,18 +234,27 @@
       const px = cx + p.u * half;
       const py = cy + p.v * half;
       const nearNode = Math.abs(val) < 0.16;
+      if (nearNode) nearNodeCount++;
       ctx.fillStyle = nearNode
         ? rgba(ink, alpha * 0.82)
         : rgba(accent, alpha * 0.42);
       ctx.fillRect(px - 1.1, py - 1.1, 2.2, 2.2);
     }
 
-    // 6. Monospace Spectral PDE Annotation
-    const kSq = (preset.n * preset.n + preset.m * preset.m).toFixed(0);
+    // 6. Telemetry & Monospace Spectral PDE Annotation
+    const kSq = n * n + m * m;
+    state.telemetry.eigenKSq = kSq;
+    state.telemetry.eigenNodalPct = Math.round((nearNodeCount / PARTICLE_COUNT) * 100);
+    state.telemetry.eigenCursorVal = evalChladni(
+      Math.max(-1, Math.min(1, ptrU)),
+      Math.max(-1, Math.min(1, ptrV)),
+      n, m, c1, c2, ptrU, ptrV
+    );
+
     ctx.font = '10px "IBM Plex Mono", ui-monospace, monospace';
     ctx.fillStyle = rgba(ink, alpha * 0.48);
     ctx.fillText(
-      `∇²u + k²u = 0   ·   ${preset.name}   ·   k²/π² = ${kSq}`,
+      `∇²u + k²u = 0   ·   MODE (${n}, ${m})   ·   k²/π² = ${kSq}`,
       left,
       top + plateSize + 22
     );
@@ -238,6 +265,8 @@
   Manifold.fields.eigenmode = {
     init,
     reset: () => init(false),
+    scatter,
+    cyclePreset: () => applyPreset(presetIndex + 1, false),
     handleClick,
     render
   };
