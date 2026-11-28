@@ -199,7 +199,7 @@
     audio = new Audio();
     audio.loop = true;
     audio.autoplay = true;
-    audio.preload = 'auto';
+    audio.preload = 'metadata';
     audio.volume = 0;
 
     audio.addEventListener('canplay', () => {

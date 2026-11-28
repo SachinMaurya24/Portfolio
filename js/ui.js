@@ -157,6 +157,10 @@
         }
       }
     });
+
+    if (Manifold.dockLab) {
+      Manifold.dockLab.syncActiveMode();
+    }
   }
 
   function updateScrollTargets() {
@@ -547,6 +551,26 @@
         Manifold.notify(`FIELD LOCKED · ${MODE_META[m].label}`);
       });
     });
+
+    // Plate Technical Proof & Architecture drawers
+    const specTriggers = Array.from(document.querySelectorAll('.spec-trigger'));
+    specTriggers.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const wrap = btn.closest('.spec-block');
+        if (!wrap) return;
+        const willOpen = !wrap.classList.contains('is-open');
+        wrap.classList.toggle('is-open', willOpen);
+        btn.setAttribute('aria-expanded', String(willOpen));
+        const marker = btn.querySelector('.spec-marker');
+        if (marker) marker.textContent = willOpen ? '−' : '+';
+      });
+    });
+
+    // Monograph CV print action
+    const printCvBtn = document.getElementById('btn-print-cv');
+    if (printCvBtn) {
+      printCvBtn.addEventListener('click', () => window.print());
+    }
   }
 
   function bindGlobalListeners() {
@@ -652,6 +676,7 @@
     updateScrollTargets,
     updateTelemetryReadouts,
     syncAttractorPills,
-    syncEigenSliders
+    syncEigenSliders,
+    drawSparkline
   };
 })(window);

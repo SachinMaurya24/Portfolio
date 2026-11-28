@@ -133,6 +133,14 @@
         Manifold.github.init();
       }
 
+      if (Manifold.dockLab) {
+        Manifold.dockLab.init();
+      }
+
+      if (Manifold.commandPalette) {
+        Manifold.commandPalette.init();
+      }
+
       if (Manifold.audio) {
         Manifold.audio.init();
       }

@@ -210,3 +210,39 @@ body.is-paused .live-square {
     bottom: 1.5rem;
   }
 }
+
+/* Clean Archival Print Mode for Monograph Curriculum Vitae */
+@media print {
+  #manifold-canvas,
+  .masthead,
+  .field-dock,
+  .canvas-toast,
+  .cmd-overlay,
+  .lock-btn,
+  .manifold-slider {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #FFFFFF !important;
+    color: #141517 !important;
+  }
+
+  main {
+    padding-top: 0 !important;
+    opacity: 1 !important;
+  }
+
+  .editorial-veil {
+    background: #FFFFFF !important;
+    border-color: #D4D2CC !important;
+    backdrop-filter: none !important;
+  }
+
+  .spec-drawer,
+  .axiom-drawer {
+    display: block !important;
+  }
+}
+
